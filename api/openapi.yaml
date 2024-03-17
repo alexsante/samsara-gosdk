@@ -1,0 +1,4917 @@
+openapi: 3.0.1
+info:
+  description: "Integrate your data with the Samsara API, customize the Samsara experience,\
+    \ and join a community of developers building with Samsara."
+  title: Samsara API
+  version: 2019-12-12
+servers:
+- url: https://api.samsara.com/
+security:
+- bearerAuth: []
+paths:
+  /addresses:
+    get:
+      description: Returns a list of all addresses in an organization
+      operationId: listAddresses
+      parameters:
+      - description: The limit for how many objects will be in the response. Default
+          and max for this value is 512 objects.
+        in: query
+        name: limit
+        schema:
+          default: 512
+          format: int64
+          maximum: 512
+          minimum: 1
+          type: integer
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      - description: "A filter on the data based on this comma-separated list of tag\
+          \ IDs. Example: `tagIds=1234,5678`"
+        explode: false
+        in: query
+        name: tagIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAddressesResponse'
+          description: List of all addresses in the organization
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: List all addresses
+    post:
+      description: Creates a new address in the organization
+      operationId: createAddress
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAddressRequest'
+        description: The address to create.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponse'
+          description: Newly created address object with ID.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Create an address
+      x-codegen-request-body-name: address
+  /addresses/{id}:
+    delete:
+      description: Delete a specific address.
+      operationId: deleteAddress
+      parameters:
+      - description: "ID of the Address. This can either be the Samsara-provided ID\
+          \ or an external ID. External IDs are customer-specified key-value pairs\
+          \ created in the POST or PATCH requests of this resource. To specify an\
+          \ external ID as part of a path parameter, use the following format: `key:value`.\
+          \ For example, `crmId:abc123`"
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          content: {}
+          description: Empty success body
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Unexpected error.
+      summary: Delete an address
+    get:
+      description: Returns a specific address.
+      operationId: getAddress
+      parameters:
+      - description: "ID of the Address. This can either be the Samsara-provided ID\
+          \ or an external ID. External IDs are customer-specified key-value pairs\
+          \ created in the POST or PATCH requests of this resource. To specify an\
+          \ external ID as part of a path parameter, use the following format: `key:value`.\
+          \ For example, `crmId:abc123`"
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponse'
+          description: An Address.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Retrieve an address
+    patch:
+      description: Update a specific address.
+      operationId: updateAddress
+      parameters:
+      - description: "ID of the Address. This can either be the Samsara-provided ID\
+          \ or an external ID. External IDs are customer-specified key-value pairs\
+          \ created in the POST or PATCH requests of this resource. To specify an\
+          \ external ID as part of a path parameter, use the following format: `key:value`.\
+          \ For example, `crmId:abc123`"
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAddressRequest'
+        description: The address fields to update.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponse'
+          description: Updated address object with ID.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Update an address
+      x-codegen-request-body-name: address
+  /contacts:
+    get:
+      description: Returns a list of all contacts in an organization.
+      operationId: listContacts
+      parameters:
+      - description: The limit for how many objects will be in the response. Default
+          and max for this value is 512 objects.
+        in: query
+        name: limit
+        schema:
+          default: 512
+          format: int64
+          maximum: 512
+          minimum: 1
+          type: integer
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListContactsResponse'
+          description: List of all contacts
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: List all contacts
+    post:
+      description: Add a contact to the organization
+      operationId: createContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContactRequest'
+        description: The contact create parameters.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactResponse'
+          description: Contact was successfully added.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Create a contact
+      x-codegen-request-body-name: contact
+  /contacts/{id}:
+    delete:
+      description: Delete the given contact.
+      operationId: deleteContact
+      parameters:
+      - description: Unique identifier for the contact.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          content: {}
+          description: Returns an empty success response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Delete a contact
+    get:
+      description: Get a specific contact's information.
+      operationId: getContact
+      parameters:
+      - description: Unique identifier for the contact.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactResponse'
+          description: Returns the specified contact.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Retrieve a contact
+    patch:
+      description: Update a specific contact's information.
+      operationId: updateContact
+      parameters:
+      - description: Unique identifier for the contact.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContactRequest'
+        description: Updates to the contact.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactResponse'
+          description: Updated contact object with given ID.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Update a contact
+      x-codegen-request-body-name: contact
+  /fleet/drivers:
+    get:
+      description: Get all drivers in organization.
+      operationId: listDrivers
+      parameters:
+      - description: "If value is true, only drivers that are deactivated will appear\
+          \ in the response. This parameter will default to false if not provided\
+          \ (fetching only active drivers)."
+        in: query
+        name: isDeactivated
+        schema:
+          type: boolean
+      - description: The limit for how many objects will be in the response. Default
+          and max for this value is 512 objects.
+        in: query
+        name: limit
+        schema:
+          default: 512
+          format: int64
+          maximum: 512
+          minimum: 1
+          type: integer
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      - description: "A filter on the data based on this comma-separated list of tag\
+          \ IDs. Example: `tagIds=1234,5678`"
+        explode: false
+        in: query
+        name: tagIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: "A filter on data to have an updated at time after or equal to\
+          \ this specified time in RFC 3339 format. Millisecond precision and timezones\
+          \ are supported. (Examples: 2019-06-13T19:08:25Z, 2019-06-13T19:08:25.455Z,\
+          \ OR 2015-09-15T14:00:12-04:00)."
+        in: query
+        name: updatedAfterTime
+        schema:
+          format: date-time
+          type: string
+      - description: "A filter on data to have a created at time after or equal to\
+          \ this specified time in RFC 3339 format. Millisecond precision and timezones\
+          \ are supported. (Examples: 2019-06-13T19:08:25Z, 2019-06-13T19:08:25.455Z,\
+          \ OR 2015-09-15T14:00:12-04:00)."
+        in: query
+        name: createdAfterTime
+        schema:
+          format: date-time
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListDriversResponse'
+          description: List of all driver objects.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: List all drivers
+    post:
+      description: Add a driver to the organization.
+      operationId: createDriver
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDriverRequest'
+        description: The driver to create.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverResponse'
+          description: "Newly created driver object, with Samsara-generated ID."
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Create a driver
+      x-codegen-request-body-name: driver
+  /fleet/drivers/{id}:
+    get:
+      description: Get information about a driver.
+      operationId: getDriver
+      parameters:
+      - description: "ID of the driver. This can either be the Samsara-specified ID,\
+          \ or an external ID. External IDs are customer specified key-value pairs\
+          \ created in the POST or PATCH requests of this resource. To specify an\
+          \ external ID as part of a path parameter, use the following format: `key:value`.\
+          \ For example, `payrollId:ABFS18600`"
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverResponse'
+          description: Returns the specified driver.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Retrieve a driver
+    patch:
+      description: Update a specific driver's information. This can also be used to
+        activate or de-activate a given driver
+      operationId: updateDriver
+      parameters:
+      - description: "ID of the driver. This can either be the Samsara-specified ID,\
+          \ or an external ID. External IDs are customer specified key-value pairs\
+          \ created in the POST or PATCH requests of this resource. To specify an\
+          \ external ID as part of a path parameter, use the following format: `key:value`.\
+          \ For example, `payrollId:ABFS18600`"
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDriverRequest'
+        description: Updates to the driver properties.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriverResponse'
+          description: "Updated driver object, with ID."
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Update a driver
+      x-codegen-request-body-name: driver
+  /fleet/vehicles:
+    get:
+      description: Returns a list of all vehicles.
+      operationId: listVehicles
+      parameters:
+      - description: The limit for how many objects will be in the response. Default
+          and max for this value is 512 objects.
+        in: query
+        name: limit
+        schema:
+          default: 512
+          format: int64
+          maximum: 512
+          minimum: 1
+          type: integer
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      - description: "A filter on the data based on this comma-separated list of tag\
+          \ IDs. Example: `tagIds=1234,5678`"
+        explode: false
+        in: query
+        name: tagIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListVehiclesResponse'
+          description: "List of all vehicle objects, and pagination parameters."
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: List all vehicles
+  /fleet/vehicles/locations:
+    get:
+      description: "Returns last known location for all vehicles (connected via Samsara\
+        \ Vehicle Gateways). This can be optionally filtered by tags or specific vehicle\
+        \ IDs. See [here](https://developers.samsara.com/docs/vehicle-locations) for\
+        \ more details."
+      operationId: getVehicleLocations
+      parameters:
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      - description: "A filter on the data based on this comma-separated list of tag\
+          \ IDs. Example: `tagIds=1234,5678`"
+        explode: false
+        in: query
+        name: tagIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: "A filter on the data based on this comma-separated list of vehicle\
+          \ IDs. Example: `vehicleIds=1234,5678`"
+        explode: false
+        in: query
+        name: vehicleIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleLocationsResponse'
+          description: List of the most recent locations for the specified vehicles.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Get most recent vehicle locations
+  /fleet/vehicles/locations/feed:
+    get:
+      description: "Follow a continuous feed of all vehicle locations from Samsara\
+        \ Vehicle Gateways.\n\nYour first call to this endpoint will provide you with\
+        \ the most recent location for each vehicle and a `pagination` object that\
+        \ contains an `endCursor`.\n\nYou can provide the `endCursor` to the `after`\
+        \ parameter of this endpoint to get location updates since that `endCursor`.\
+        \ \n\nIf `hasNextPage` is `false`, no updates are readily available yet. We'd\
+        \ suggest waiting a minimum of 5 seconds before requesting updates.\n\nSee\
+        \ [this guide](https://developers.samsara.com/docs/vehicle-locations#section-follow-a-real-time-feed-of-vehicle-locations)\
+        \ for more details."
+      operationId: getVehicleLocationsFeed
+      parameters:
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      - description: "A filter on the data based on this comma-separated list of tag\
+          \ IDs. Example: `tagIds=1234,5678`"
+        explode: false
+        in: query
+        name: tagIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: "A filter on the data based on this comma-separated list of vehicle\
+          \ IDs. Example: `vehicleIds=1234,5678`"
+        explode: false
+        in: query
+        name: vehicleIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleLocationsListResponse'
+          description: List of locations events for the specified vehicles.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Follow a feed of vehicle locations
+  /fleet/vehicles/locations/history:
+    get:
+      description: "Returns all known vehicle locations during the given time range\
+        \ for all vehicles (connected via Samsara Vehicle Gateways). This can be optionally\
+        \ filtered by tags or specific vehicle IDs. See [here](https://developers.samsara.com/docs/vehicle-locations)\
+        \ for more details."
+      operationId: getVehicleLocationsHistory
+      parameters:
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      - description: "A start time in RFC 3339 format. Millisecond precision and timezones\
+          \ are supported. (Examples: 2019-06-13T19:08:25Z, 2019-06-13T19:08:25.455Z,\
+          \ OR 2015-09-15T14:00:12-04:00)."
+        in: query
+        name: startTime
+        required: true
+        schema:
+          format: date-time
+          type: string
+      - description: "An end time in RFC 3339 format. Millisecond precision and timezones\
+          \ are supported. (Examples: 2019-06-13T19:08:25Z, 2019-06-13T19:08:25.455Z,\
+          \ OR 2015-09-15T14:00:12-04:00)."
+        in: query
+        name: endTime
+        required: true
+        schema:
+          format: date-time
+          type: string
+      - description: "A filter on the data based on this comma-separated list of tag\
+          \ IDs. Example: `tagIds=1234,5678`"
+        explode: false
+        in: query
+        name: tagIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: "A filter on the data based on this comma-separated list of vehicle\
+          \ IDs. Example: `vehicleIds=1234,5678`"
+        explode: false
+        in: query
+        name: vehicleIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleLocationsListResponse'
+          description: List of all locations for the specified vehicles and time range.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Get historical vehicle locations
+  /fleet/vehicles/stats:
+    get:
+      description: "Returns last known stats for all vehicles (connected via Samsara\
+        \ Vehicle Gateways). This can be optionally filtered by tags or specific vehicle\
+        \ IDs. See [here](https://developers.samsara.com/docs/vehicle-stats) for more\
+        \ details."
+      operationId: getVehicleStats
+      parameters:
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      - description: "A filter on the data based on this comma-separated list of tag\
+          \ IDs. Example: `tagIds=1234,5678`"
+        explode: false
+        in: query
+        name: tagIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: "A filter on the data based on this comma-separated list of vehicle\
+          \ IDs. Example: `vehicleIds=1234,5678`"
+        explode: false
+        in: query
+        name: vehicleIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: |-
+          The stat type you want this endpoint to return information on. Currently only one stat type is accepted per request.
+
+          - `engineStates`: The state of the engine (`Off`, `On`, `Idle`).
+          - `fuelPercents`: The engine fuel level in percentage points (e.g. `99`, `50`, etc).
+          - `obdOdometerMeters`: The odometer reading according to on-board diagnostics. If Samsara does not have diagnostic coverage for a particular vehicle, the value for this stat type will be omitted. In these cases, we recommend using `gpsOdometerMeters`.
+          - `gpsOdometerMeters`: The odometer reading according to GPS calculations. This calculation is based off GPS distance traveled and a manual odometer offset for a given vehicle, specified by the user in Samsara's dashboard UI or through the `odometerMeters` field in the [PATCH /fleet/vehicles/{id}](#operation/updateVehicleById) endpoint. `gpsOdometerMeters` is equal to the manual offset plus the GPS distance traveled since the offset was set. The value for this stat type will be omitted if a manual offset is not provided for a given vehicle. *A manual offset can only be provided when we do not have diagnostic coverage for a particular vehicle.*
+          - `obdEngineSeconds`: The cumulative number of seconds the engine has run according to on-board diagnostics.
+          - `gpsDistanceMeters`: The distance the vehicle has traveled since the gateway was installed based on GPS calculations.
+        explode: false
+        in: query
+        name: types
+        required: true
+        schema:
+          items:
+            enum:
+            - engineStates
+            - fuelPercents
+            - obdOdometerMeters
+            - gpsOdometerMeters
+            - obdEngineSeconds
+            - gpsDistanceMeters
+            example: obdOdometerMeters
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleStatsResponse'
+          description: List of the most recent stats for the specified vehicles and
+            stat types.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: List most recent vehicle stats
+  /fleet/vehicles/stats/feed:
+    get:
+      description: |-
+        Follow a continuous feed of vehicle stats from Samsara Vehicle Gateways.
+
+        Your first call to this endpoint will provide you with the most recent stats for each vehicle and a `pagination` object that contains an `endCursor`.
+
+        You can provide the `endCursor` to the `after` parameter of this endpoint to get vehicle stat updates since that `endCursor`.
+
+        If `hasNextPage` is `false`, no updates are readily available yet. Each stat type has a different refresh rate, but in general we'd suggest waiting a minimum of 5 seconds before requesting updates. See [this guide](https://developers.samsara.com/docs/vehicle-stats#section-follow-a-real-time-feed-of-vehicle-stats) for more details.
+      operationId: getVehicleStatsFeed
+      parameters:
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      - description: "A filter on the data based on this comma-separated list of tag\
+          \ IDs. Example: `tagIds=1234,5678`"
+        explode: false
+        in: query
+        name: tagIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: "A filter on the data based on this comma-separated list of vehicle\
+          \ IDs. Example: `vehicleIds=1234,5678`"
+        explode: false
+        in: query
+        name: vehicleIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: |-
+          The stat type you want this endpoint to return information on. Currently only one stat type is accepted per request.
+
+          - `engineStates`: The state of the engine (`Off`, `On`, `Idle`).
+          - `fuelPercents`: The engine fuel level in percentage points (e.g. `99`, `50`, etc).
+          - `obdOdometerMeters`: The odometer reading according to on-board diagnostics. If Samsara does not have diagnostic coverage for a particular vehicle, the value for this stat type will be omitted. In these cases, we recommend using `gpsOdometerMeters`.
+          - `gpsOdometerMeters`: The odometer reading according to GPS calculations. This calculation is based off GPS distance traveled and a manual odometer offset for a given vehicle, specified by the user in Samsara's dashboard UI or through the `odometerMeters` field in the [PATCH /fleet/vehicles/{id}](#operation/updateVehicleById) endpoint. `gpsOdometerMeters` is equal to the manual offset plus the GPS distance traveled since the offset was set. The value for this stat type will be omitted if a manual offset is not provided for a given vehicle. *A manual offset can only be provided when we do not have diagnostic coverage for a particular vehicle.*
+          - `obdEngineSeconds`: The cumulative number of seconds the engine has run according to on-board diagnostics.
+          - `gpsDistanceMeters`: The distance the vehicle has traveled since the gateway was installed based on GPS calculations.
+        explode: false
+        in: query
+        name: types
+        required: true
+        schema:
+          items:
+            enum:
+            - engineStates
+            - fuelPercents
+            - obdOdometerMeters
+            - gpsOdometerMeters
+            - obdEngineSeconds
+            - gpsDistanceMeters
+            example: obdOdometerMeters
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleStatsListResponse'
+          description: List of stat events for the specified vehicles and stat types.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Follow a feed of vehicle stats
+  /fleet/vehicles/stats/history:
+    get:
+      description: "Returns vehicle stats events during the given time range for all\
+        \ vehicles (connected via Samsara Vehicle Gateways). This can be optionally\
+        \ filtered by tags or specific vehicle IDs. See [here](https://developers.samsara.com/docs/vehicle-stats)\
+        \ for more details."
+      operationId: getVehicleStatsHistory
+      parameters:
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      - description: "A start time in RFC 3339 format. Millisecond precision and timezones\
+          \ are supported. (Examples: 2019-06-13T19:08:25Z, 2019-06-13T19:08:25.455Z,\
+          \ OR 2015-09-15T14:00:12-04:00)."
+        in: query
+        name: startTime
+        required: true
+        schema:
+          format: date-time
+          type: string
+      - description: "An end time in RFC 3339 format. Millisecond precision and timezones\
+          \ are supported. (Examples: 2019-06-13T19:08:25Z, 2019-06-13T19:08:25.455Z,\
+          \ OR 2015-09-15T14:00:12-04:00)."
+        in: query
+        name: endTime
+        required: true
+        schema:
+          format: date-time
+          type: string
+      - description: "A filter on the data based on this comma-separated list of tag\
+          \ IDs. Example: `tagIds=1234,5678`"
+        explode: false
+        in: query
+        name: tagIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: "A filter on the data based on this comma-separated list of vehicle\
+          \ IDs. Example: `vehicleIds=1234,5678`"
+        explode: false
+        in: query
+        name: vehicleIds
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - description: |-
+          The stat type you want this endpoint to return information on. Currently only one stat type is accepted per request.
+
+          - `engineStates`: The state of the engine (`Off`, `On`, `Idle`).
+          - `fuelPercents`: The engine fuel level in percentage points (e.g. `99`, `50`, etc).
+          - `obdOdometerMeters`: The odometer reading according to on-board diagnostics. If Samsara does not have diagnostic coverage for a particular vehicle, the value for this stat type will be omitted. In these cases, we recommend using `gpsOdometerMeters`.
+          - `gpsOdometerMeters`: The odometer reading according to GPS calculations. This calculation is based off GPS distance traveled and a manual odometer offset for a given vehicle, specified by the user in Samsara's dashboard UI or through the `odometerMeters` field in the [PATCH /fleet/vehicles/{id}](#operation/updateVehicleById) endpoint. `gpsOdometerMeters` is equal to the manual offset plus the GPS distance traveled since the offset was set. The value for this stat type will be omitted if a manual offset is not provided for a given vehicle. *A manual offset can only be provided when we do not have diagnostic coverage for a particular vehicle.*
+          - `obdEngineSeconds`: The cumulative number of seconds the engine has run according to on-board diagnostics.
+          - `gpsDistanceMeters`: The distance the vehicle has traveled since the gateway was installed based on GPS calculations.
+        explode: false
+        in: query
+        name: types
+        required: true
+        schema:
+          items:
+            enum:
+            - engineStates
+            - fuelPercents
+            - obdOdometerMeters
+            - gpsOdometerMeters
+            - obdEngineSeconds
+            - gpsDistanceMeters
+            example: obdOdometerMeters
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleStatsListResponse'
+          description: "List of vehicle stats for the specified vehicles, stat type,\
+            \ and time range."
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Get historical vehicle stats
+  /fleet/vehicles/{id}:
+    get:
+      description: Get information about a specific vehicle.
+      operationId: getVehicle
+      parameters:
+      - description: "ID of the vehicle. This can either be the Samsara-specified\
+          \ ID, or an external ID. External IDs are customer specified key-value pairs\
+          \ created in the POST or PATCH requests of this resource. To specify an\
+          \ external ID as part of a path parameter, use the following format: `key:value`.\
+          \ For example, `maintenanceId:250020`"
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleResponse'
+          description: Returns the specified vehicle object.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Retrieve a vehicle
+    patch:
+      description: |-
+        Updates the given Vehicle object.
+
+        **Note:** Vehicle objects are automatically created when Samsara Vehicle Gateways are installed. You cannot create a Vehicle object via API.
+
+        You are able to *update* many of the fields of a Vehicle.
+
+        **Note**: There are no required fields in the request body, and you only need to provide the fields you wish to update.
+      operationId: updateVehicle
+      parameters:
+      - description: "ID of the vehicle. This can either be the Samsara-specified\
+          \ ID, or an external ID. External IDs are customer specified key-value pairs\
+          \ created in the POST or PATCH requests of this resource. To specify an\
+          \ external ID as part of a path parameter, use the following format: `key:value`.\
+          \ For example, `maintenanceId:250020`"
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVehicleRequest'
+        description: Fields that can be patched on a vehicle.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleResponse'
+          description: Returns the specified vehicle object.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Update a vehicle
+      x-codegen-request-body-name: vehicle
+  /tags:
+    get:
+      description: Return all of the tags for an organization.
+      operationId: listTags
+      parameters:
+      - description: The limit for how many objects will be in the response. Default
+          and max for this value is 512 objects.
+        in: query
+        name: limit
+        schema:
+          default: 512
+          format: int64
+          maximum: 512
+          minimum: 1
+          type: integer
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTagsResponse'
+          description: List of tags.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: List all tags
+    post:
+      description: Create a new tag for the organization.
+      operationId: createTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTagRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagResponse'
+          description: "Newly created tag object, including the new tag ID."
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Create a tag
+      x-codegen-request-body-name: tag
+  /tags/{id}:
+    delete:
+      description: Permanently deletes a tag.
+      operationId: deleteTag
+      parameters:
+      - description: Unique identifier for the tag.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          content: {}
+          description: Successfully deleted the tag. No response body is returned.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Delete a tag
+    get:
+      description: Fetch a tag by id.
+      operationId: getTag
+      parameters:
+      - description: Unique identifier for the tag.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagResponse'
+          description: The tag corresponding to request id.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Retrieve a tag
+    put:
+      description: Update a tag with a new name and new members. This API call would
+        replace all old members of a tag with new members specified in the request
+        body.
+      operationId: replaceTag
+      parameters:
+      - description: Unique identifier for the tag.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplaceTagRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagResponse'
+          description: The updated tag data.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Update a tag
+      x-codegen-request-body-name: tag
+  /user-roles:
+    get:
+      description: Returns a list of all user roles in an organization.
+      operationId: listUserRoles
+      parameters:
+      - description: The limit for how many objects will be in the response. Default
+          and max for this value is 512 objects.
+        in: query
+        name: limit
+        schema:
+          default: 512
+          format: int64
+          maximum: 512
+          minimum: 1
+          type: integer
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserRolesResponse'
+          description: List all user roles.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: List all user roles
+  /users:
+    get:
+      description: Returns a list of all users in an organization.
+      operationId: listUsers
+      parameters:
+      - description: The limit for how many objects will be in the response. Default
+          and max for this value is 512 objects.
+        in: query
+        name: limit
+        schema:
+          default: 512
+          format: int64
+          maximum: 512
+          minimum: 1
+          type: integer
+      - description: "If specified, this should be the endCursor value from the previous\
+          \ page of results. When present, this request will return the next page\
+          \ of results that occur immediately after the previous page of results."
+        in: query
+        name: after
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUsersResponse'
+          description: List all users.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: List all users
+    post:
+      description: Add a user to the organization.
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+        description: The user to create.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: Newly created user object with ID.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Create a user
+      x-codegen-request-body-name: user
+  /users/{id}:
+    delete:
+      description: Delete the given user.
+      operationId: deleteUser
+      parameters:
+      - description: Unique identifier for the user.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          content: {}
+          description: Returns an empty success response.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Delete a user
+    get:
+      description: Get a specific user's information.
+      operationId: getUser
+      parameters:
+      - description: Unique identifier for the user.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: Returns the specified user.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Retrieve a user
+    patch:
+      description: Update a specific user's information.
+      operationId: updateUser
+      parameters:
+      - description: Unique identifier for the user.
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+        description: Updates to the user.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+          description: Updated user object with ID.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/standardErrorResponse'
+          description: Error response
+      summary: Update a user
+      x-codegen-request-body-name: user
+components:
+  parameters:
+    isDeactivatedParam:
+      description: "If value is true, only drivers that are deactivated will appear\
+        \ in the response. This parameter will default to false if not provided (fetching\
+        \ only active drivers)."
+      in: query
+      name: isDeactivated
+      schema:
+        type: boolean
+    vehicleStatTypes:
+      description: |-
+        The stat type you want this endpoint to return information on. Currently only one stat type is accepted per request.
+
+        - `engineStates`: The state of the engine (`Off`, `On`, `Idle`).
+        - `fuelPercents`: The engine fuel level in percentage points (e.g. `99`, `50`, etc).
+        - `obdOdometerMeters`: The odometer reading according to on-board diagnostics. If Samsara does not have diagnostic coverage for a particular vehicle, the value for this stat type will be omitted. In these cases, we recommend using `gpsOdometerMeters`.
+        - `gpsOdometerMeters`: The odometer reading according to GPS calculations. This calculation is based off GPS distance traveled and a manual odometer offset for a given vehicle, specified by the user in Samsara's dashboard UI or through the `odometerMeters` field in the [PATCH /fleet/vehicles/{id}](#operation/updateVehicleById) endpoint. `gpsOdometerMeters` is equal to the manual offset plus the GPS distance traveled since the offset was set. The value for this stat type will be omitted if a manual offset is not provided for a given vehicle. *A manual offset can only be provided when we do not have diagnostic coverage for a particular vehicle.*
+        - `obdEngineSeconds`: The cumulative number of seconds the engine has run according to on-board diagnostics.
+        - `gpsDistanceMeters`: The distance the vehicle has traveled since the gateway was installed based on GPS calculations.
+      explode: false
+      in: query
+      name: types
+      required: true
+      schema:
+        items:
+          enum:
+          - engineStates
+          - fuelPercents
+          - obdOdometerMeters
+          - gpsOdometerMeters
+          - obdEngineSeconds
+          - gpsDistanceMeters
+          example: obdOdometerMeters
+          type: string
+        type: array
+      style: form
+  schemas:
+    Address:
+      description: An Address object.
+      example:
+        notes: "Hours of operation: 8am - 6pm; Truck entrance on the Rhode Island\
+          \ street side."
+        formattedAddress: "350 Rhode Island St, San Francisco, CA"
+        geofence:
+          polygon:
+            vertices:
+            - latitude: 37.765363
+              longitude: -122.403098
+            - latitude: 38.765363
+              longitude: -122.403098
+            - latitude: 37.765363
+              longitude: -123.403098
+          circle:
+            latitude: 37.765363
+            radiusMeters: 25
+            longitude: -122.4029238
+        latitude: 37.765363
+        externalIds:
+          maintenanceId: "250020"
+          payrollId: ABFS18600
+        name: Samsara HQ
+        id: "22408"
+        addressTypes:
+        - yard
+        - yard
+        contacts:
+        - firstName: Jane
+          lastName: Jones
+          id: "22408"
+        - firstName: Jane
+          lastName: Jones
+          id: "22408"
+        longitude: -122.4029238
+        tags:
+        - parentTagId: "4815"
+          name: East Coast
+          id: "3914"
+        - parentTagId: "4815"
+          name: East Coast
+          id: "3914"
+      properties:
+        addressTypes:
+          description: Reporting location type associated with the address (used for
+            ELD reporting purposes).
+          items:
+            enum:
+            - yard
+            - shortHaul
+            example: yard
+            type: string
+          type: array
+        contacts:
+          description: An array Contact mini-objects that are associated the Address.
+          items:
+            $ref: '#/components/schemas/contactTinyResponse'
+          type: array
+        externalIds:
+          additionalProperties:
+            type: string
+          description: "The [external IDs](https://developers.samsara.com/docs/external-ids)\
+            \ for the given object."
+          example:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          type: object
+        formattedAddress:
+          description: "The full street address for this address/geofence, as it might\
+            \ be recognized by Google Maps."
+          example: "350 Rhode Island St, San Francisco, CA"
+          maxLength: 1024
+          type: string
+        geofence:
+          $ref: '#/components/schemas/AddressGeofence'
+        id:
+          description: ID of the Address.
+          example: "22408"
+          type: string
+        latitude:
+          description: Latitude of the address. Will be geocoded from `formattedAddress`
+            if not provided.
+          example: 37.765363
+          format: double
+          type: number
+        longitude:
+          description: Longitude of the address. Will be geocoded from `formattedAddress`
+            if not provided.
+          example: -122.4029238
+          format: double
+          type: number
+        name:
+          description: Name of the address.
+          example: Samsara HQ
+          maxLength: 255
+          type: string
+        notes:
+          description: Notes about the address.
+          example: "Hours of operation: 8am - 6pm; Truck entrance on the Rhode Island\
+            \ street side."
+          maxLength: 280
+          type: string
+        tags:
+          description: An array of all tag mini-objects that are associated with the
+            given address entry.
+          items:
+            $ref: '#/components/schemas/tagTinyResponse'
+          type: array
+      required:
+      - formattedAddress
+      - geofence
+      - id
+      - name
+      type: object
+    AddressContactIds:
+      description: An array of Contact IDs associated with this Address.
+      items:
+        example: "22408"
+        type: string
+      type: array
+    AddressContacts:
+      description: An array Contact mini-objects that are associated the Address.
+      items:
+        $ref: '#/components/schemas/contactTinyResponse'
+      type: array
+    AddressExternalIds:
+      $ref: '#/components/schemas/externalIds'
+    AddressFormattedAddress:
+      description: "The full street address for this address/geofence, as it might\
+        \ be recognized by Google Maps."
+      example: "350 Rhode Island St, San Francisco, CA"
+      maxLength: 1024
+      type: string
+    AddressGeofence:
+      description: "The geofence that defines this address and its bounds. This can\
+        \ either be a circle or a polygon, but not both."
+      example:
+        polygon:
+          vertices:
+          - latitude: 37.765363
+            longitude: -122.403098
+          - latitude: 38.765363
+            longitude: -122.403098
+          - latitude: 37.765363
+            longitude: -123.403098
+        circle:
+          latitude: 37.765363
+          radiusMeters: 25
+          longitude: -122.4029238
+      properties:
+        circle:
+          $ref: '#/components/schemas/AddressGeofence_circle'
+        polygon:
+          $ref: '#/components/schemas/AddressGeofence_polygon'
+      type: object
+    AddressId:
+      description: ID of the Address.
+      example: "22408"
+      type: string
+    AddressLatitude:
+      description: Latitude of the address. Will be geocoded from `formattedAddress`
+        if not provided.
+      example: 37.765363
+      format: double
+      type: number
+    AddressLongitude:
+      description: Longitude of the address. Will be geocoded from `formattedAddress`
+        if not provided.
+      example: -122.4029238
+      format: double
+      type: number
+    AddressName:
+      description: Name of the address.
+      example: Samsara HQ
+      maxLength: 255
+      type: string
+    AddressNotes:
+      description: Notes about the address.
+      example: "Hours of operation: 8am - 6pm; Truck entrance on the Rhode Island\
+        \ street side."
+      maxLength: 280
+      type: string
+    AddressResponse:
+      description: An Address response body.
+      example:
+        data:
+          notes: "Hours of operation: 8am - 6pm; Truck entrance on the Rhode Island\
+            \ street side."
+          formattedAddress: "350 Rhode Island St, San Francisco, CA"
+          geofence:
+            polygon:
+              vertices:
+              - latitude: 37.765363
+                longitude: -122.403098
+              - latitude: 38.765363
+                longitude: -122.403098
+              - latitude: 37.765363
+                longitude: -123.403098
+            circle:
+              latitude: 37.765363
+              radiusMeters: 25
+              longitude: -122.4029238
+          latitude: 37.765363
+          externalIds:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          name: Samsara HQ
+          id: "22408"
+          addressTypes:
+          - yard
+          - yard
+          contacts:
+          - firstName: Jane
+            lastName: Jones
+            id: "22408"
+          - firstName: Jane
+            lastName: Jones
+            id: "22408"
+          longitude: -122.4029238
+          tags:
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+      properties:
+        data:
+          $ref: '#/components/schemas/Address'
+      required:
+      - data
+      type: object
+    AddressTagIds:
+      description: An array of IDs of tags to associate with this address.
+      items:
+        example: "3914"
+        type: string
+      type: array
+    AddressTags:
+      description: An array of all tag mini-objects that are associated with the given
+        address entry.
+      items:
+        $ref: '#/components/schemas/tagTinyResponse'
+      type: array
+    AddressTypes:
+      description: Reporting location type associated with the address (used for ELD
+        reporting purposes).
+      items:
+        enum:
+        - yard
+        - shortHaul
+        example: yard
+        type: string
+      type: array
+    Contact:
+      description: Information about a notification contact for alerts.
+      example:
+        firstName: Jane
+        lastName: Jones
+        phone: 111-222-3344
+        id: "22408"
+        email: jane.jones@yahoo.com
+      properties:
+        email:
+          description: Email address of the contact.
+          example: jane.jones@yahoo.com
+          maxLength: 255
+          type: string
+        firstName:
+          description: First name of the contact.
+          example: Jane
+          maxLength: 255
+          type: string
+        id:
+          description: ID of the contact.
+          example: "22408"
+          type: string
+        lastName:
+          description: Last name of the contact.
+          example: Jones
+          maxLength: 255
+          type: string
+        phone:
+          description: Phone number of the contact.
+          example: 111-222-3344
+          maxLength: 255
+          type: string
+      required:
+      - email
+      - firstName
+      - id
+      - lastName
+      - phone
+      type: object
+    ContactEmail:
+      description: Email address of the contact.
+      example: jane.jones@yahoo.com
+      maxLength: 255
+      type: string
+    ContactFirstName:
+      description: First name of the contact.
+      example: Jane
+      maxLength: 255
+      type: string
+    ContactId:
+      description: ID of the contact.
+      example: "22408"
+      type: string
+    ContactLastName:
+      description: Last name of the contact.
+      example: Jones
+      maxLength: 255
+      type: string
+    ContactPhone:
+      description: Phone number of the contact.
+      example: 111-222-3344
+      maxLength: 255
+      type: string
+    ContactResponse:
+      description: A single contact.
+      example:
+        data:
+          firstName: Jane
+          lastName: Jones
+          phone: 111-222-3344
+          id: "22408"
+          email: jane.jones@yahoo.com
+      properties:
+        data:
+          $ref: '#/components/schemas/Contact'
+      type: object
+    CreateAddressRequest:
+      description: A request body to create an Address.
+      example:
+        notes: "Hours of operation: 8am - 6pm; Truck entrance on the Rhode Island\
+          \ street side."
+        formattedAddress: "350 Rhode Island St, San Francisco, CA"
+        geofence:
+          polygon:
+            vertices:
+            - latitude: 37.765363
+              longitude: -122.403098
+            - latitude: 38.765363
+              longitude: -122.403098
+            - latitude: 37.765363
+              longitude: -123.403098
+          circle:
+            latitude: 37.765363
+            radiusMeters: 25
+            longitude: -122.4029238
+        latitude: 37.765363
+        tagIds:
+        - "3914"
+        - "3914"
+        externalIds:
+          maintenanceId: "250020"
+          payrollId: ABFS18600
+        name: Samsara HQ
+        addressTypes:
+        - yard
+        - yard
+        contactIds:
+        - "22408"
+        - "22408"
+        longitude: -122.4029238
+      properties:
+        addressTypes:
+          description: Reporting location type associated with the address (used for
+            ELD reporting purposes).
+          items:
+            enum:
+            - yard
+            - shortHaul
+            example: yard
+            type: string
+          type: array
+        contactIds:
+          description: An array of Contact IDs associated with this Address.
+          items:
+            example: "22408"
+            type: string
+          type: array
+        externalIds:
+          additionalProperties:
+            type: string
+          description: "The [external IDs](https://developers.samsara.com/docs/external-ids)\
+            \ for the given object."
+          example:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          type: object
+        formattedAddress:
+          description: "The full street address for this address/geofence, as it might\
+            \ be recognized by Google Maps."
+          example: "350 Rhode Island St, San Francisco, CA"
+          maxLength: 1024
+          type: string
+        geofence:
+          $ref: '#/components/schemas/AddressGeofence'
+        latitude:
+          description: Latitude of the address. Will be geocoded from `formattedAddress`
+            if not provided.
+          example: 37.765363
+          format: double
+          type: number
+        longitude:
+          description: Longitude of the address. Will be geocoded from `formattedAddress`
+            if not provided.
+          example: -122.4029238
+          format: double
+          type: number
+        name:
+          description: Name of the address.
+          example: Samsara HQ
+          maxLength: 255
+          type: string
+        notes:
+          description: Notes about the address.
+          example: "Hours of operation: 8am - 6pm; Truck entrance on the Rhode Island\
+            \ street side."
+          maxLength: 280
+          type: string
+        tagIds:
+          description: An array of IDs of tags to associate with this address.
+          items:
+            example: "3914"
+            type: string
+          type: array
+      required:
+      - formattedAddress
+      - geofence
+      - name
+      type: object
+    CreateContactRequest:
+      description: Information for adding a notification contact for alerts.
+      example:
+        firstName: Jane
+        lastName: Jones
+        phone: 111-222-3344
+        email: jane.jones@yahoo.com
+      properties:
+        email:
+          description: Email address of the contact.
+          example: jane.jones@yahoo.com
+          maxLength: 255
+          type: string
+        firstName:
+          description: First name of the contact.
+          example: Jane
+          maxLength: 255
+          type: string
+        lastName:
+          description: Last name of the contact.
+          example: Jones
+          maxLength: 255
+          type: string
+        phone:
+          description: Phone number of the contact.
+          example: 111-222-3344
+          maxLength: 255
+          type: string
+      type: object
+    CreateDriverRequest:
+      description: Driver that should be created.
+      example:
+        eldAdverseWeatherExemptionEnabled: false
+        eldExemptReason: Bad driver
+        notes: Also goes by the nickname Furious Fred.
+        eldYmEnabled: false
+        licenseState: CA
+        staticAssignedVehicleId: "456"
+        timezone: America/Los_Angeles
+        eldDayStartHour: 0
+        tagIds:
+        - "147"
+        - "147"
+        externalIds:
+          maintenanceId: "250020"
+          payrollId: ABFS18600
+        vehicleGroupTagId: "342417"
+        eldExempt: false
+        locale: null
+        carrierSettings:
+          carrierName: Acme Inc.
+          mainOfficeAddress: "1234 Pear St., Scranton, PA 62814"
+          dotNumber: 98231
+        eldPcEnabled: false
+        eldBigDayExemptionEnabled: false
+        tachographCardNumber: "1000000492436002"
+        password: aSecurePassword1234
+        phone: "5558234327"
+        name: Susan Jones
+        licenseNumber: E1234567
+        username: SusanJones
+      properties:
+        carrierSettings:
+          $ref: '#/components/schemas/DriverCarrierSettings'
+        eldAdverseWeatherExemptionEnabled:
+          default: false
+          description: Flag indicating this driver may use Adverse Weather exemptions
+            in ELD logs.
+          type: boolean
+        eldBigDayExemptionEnabled:
+          default: false
+          description: Flag indicating this driver may use Big Day exemption in ELD
+            logs.
+          type: boolean
+        eldDayStartHour:
+          default: 0
+          description: "`0` indicating midnight-to-midnight ELD driving hours, `12`\
+            \ to indicate noon-to-noon driving hours."
+          type: integer
+        eldExempt:
+          default: false
+          description: Flag indicating this driver is exempt from the Electronic Logging
+            Mandate.
+          type: boolean
+        eldExemptReason:
+          description: Reason that this driver is exempt from the Electronic Logging
+            Mandate (see eldExempt).
+          example: Bad driver
+          type: string
+        eldPcEnabled:
+          default: false
+          description: Flag indicating this driver may select the Personal Conveyance
+            duty status in ELD logs.
+          type: boolean
+        eldYmEnabled:
+          default: false
+          description: Flag indicating this driver may select the Personal Conveyance
+            duty status in ELD logs.
+          type: boolean
+        externalIds:
+          additionalProperties:
+            type: string
+          description: "The [external IDs](https://developers.samsara.com/docs/external-ids)\
+            \ for the given object."
+          example:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          type: object
+        licenseNumber:
+          description: Driver's state issued license number. The combination of this
+            number and `licenseState` must be unique.
+          example: E1234567
+          type: string
+        licenseState:
+          description: Abbreviation of state that issued driver's license.
+          example: CA
+          type: string
+        locale:
+          $ref: '#/components/schemas/DriverLocale'
+        name:
+          description: Driver's name.
+          example: Susan Jones
+          maxLength: 255
+          minLength: 1
+          type: string
+        notes:
+          description: Notes about the driver.
+          example: Also goes by the nickname Furious Fred.
+          maxLength: 4096
+          type: string
+        password:
+          description: Password that the driver can use to login to the Samsara driver
+            app.
+          example: aSecurePassword1234
+          type: string
+        phone:
+          description: Phone number of the driver.
+          example: "5558234327"
+          maxLength: 255
+          type: string
+        staticAssignedVehicleId:
+          description: ID of vehicle that the driver is permanently assigned to. (uncommon).
+          example: "456"
+          type: string
+        tachographCardNumber:
+          description: Driver's assigned tachograph card number (Europe specific)
+          example: "1000000492436002"
+          type: string
+        tagIds:
+          description: IDs of tags the driver is associated with.
+          items:
+            example: "147"
+            type: string
+          type: array
+        timezone:
+          default: America/Los_Angeles
+          description: "Home terminal timezone, in order to indicate what time zone\
+            \ should be used to calculate the ELD logs. Driver timezones use [IANA\
+            \ timezone database](https://www.iana.org/time-zones) keys (e.g. `America/Los_Angeles`,\
+            \ `America/New_York`, `Europe/London`, etc.). You can find a mapping of\
+            \ common timezone formats to IANA timezone keys [here](https://unicode.org/cldr/charts/latest/supplemental/zone_tzid.html)."
+          example: America/Los_Angeles
+          type: string
+        username:
+          description: Driver's login username into the driver app. The username may
+            not contain spaces or the '@' symbol. The username must be unique.
+          example: SusanJones
+          maxLength: 189
+          minLength: 1
+          type: string
+        vehicleGroupTagId:
+          description: Tag ID which determines which vehicles a driver will see when
+            selecting vehicles.
+          example: "342417"
+          type: string
+      required:
+      - name
+      - password
+      - username
+      type: object
+    CreateTagRequest:
+      example:
+        addresses:
+        - "23502866574"
+        - "23502866574"
+        assets:
+        - "23502866574"
+        - "23502866574"
+        sensors:
+        - "23502866574"
+        - "23502866574"
+        parentTagId: "4815"
+        name: California
+        vehicles:
+        - "23502866574"
+        - "23502866574"
+        machines:
+        - "23502866574"
+        - "23502866574"
+        drivers:
+        - "23502866574"
+        - "23502866574"
+      properties:
+        addresses:
+          description: The addresses that belong to this tag.
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+        assets:
+          description: "The trailers, unpowered, and powered assets that belong to\
+            \ this tag."
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+        drivers:
+          description: The drivers that belong to this tag.
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+        machines:
+          description: The machines that belong to this tag.
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+        name:
+          description: Name of this tag.
+          example: California
+          maxLength: 191
+          minLength: 1
+          type: string
+        parentTagId:
+          description: "If this tag is part a hierarchical tag tree, this is the ID\
+            \ of the parent tag, otherwise this will be omitted."
+          example: "4815"
+          type: string
+        sensors:
+          description: The sensors that belong to this tag.
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+        vehicles:
+          description: The vehicles that belong to this tag.
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+      required:
+      - name
+      type: object
+    CreateUserRequest:
+      description: The user creation arguments
+      example:
+        roles:
+        - tagId: "3914"
+          roleId: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+        - tagId: "3914"
+          roleId: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+        name: Bob Smith
+        authType: null
+        email: user@company.com
+      properties:
+        authType:
+          $ref: '#/components/schemas/UserAuthType'
+        email:
+          description: The email address of this user.
+          example: user@company.com
+          type: string
+        name:
+          description: The first and last name of the user.
+          example: Bob Smith
+          type: string
+        roles:
+          description: "The list of roles that applies to this user. A user may have\
+            \ \"organizational\" roles, which apply to the user at the organizational\
+            \ level, and \"tag-specific\" roles, which apply to the user for a given\
+            \ tag."
+          items:
+            $ref: '#/components/schemas/UserRoleAssignmentRequest'
+          type: array
+      required:
+      - authType
+      - email
+      - name
+      - roles
+      type: object
+    Driver:
+      description: A driver object
+      example:
+        eldExemptReason: Bad driver
+        notes: Also goes by the nickname Furious Fred.
+        eldYmEnabled: false
+        timezone: America/Los_Angeles
+        eldDayStartHour: 0
+        locale: null
+        carrierSettings:
+          carrierName: Acme Inc.
+          mainOfficeAddress: "1234 Pear St., Scranton, PA 62814"
+          dotNumber: 98231
+        staticAssignedVehicle:
+          name: "Midwest Truck #4"
+          id: "123456789"
+        tachographCardNumber: "1000000492436002"
+        isDeactivated: false
+        vehicleGroupTag:
+          parentTagId: "4815"
+          name: East Coast
+          id: "3914"
+        licenseNumber: E1234567
+        id: "123"
+        eldAdverseWeatherExemptionEnabled: false
+        licenseState: CA
+        externalIds:
+          maintenanceId: "250020"
+          payrollId: ABFS18600
+        eldExempt: false
+        tags:
+        - parentTagId: "4815"
+          name: East Coast
+          id: "3914"
+        - parentTagId: "4815"
+          name: East Coast
+          id: "3914"
+        eldPcEnabled: false
+        eldBigDayExemptionEnabled: false
+        phone: "5558234327"
+        name: Susan Jones
+        updatedAtTime: 2019-06-13T19:08:25Z
+        createdAtTime: 2019-05-18T20:27:35Z
+        username: SusanJones
+      properties:
+        carrierSettings:
+          $ref: '#/components/schemas/DriverCarrierSettings'
+        createdAtTime:
+          description: The date and time this driver was created in RFC 3339 format.
+          example: 2019-05-18T20:27:35Z
+          format: date-time
+          type: string
+        eldAdverseWeatherExemptionEnabled:
+          default: false
+          description: Flag indicating this driver may use Adverse Weather exemptions
+            in ELD logs.
+          type: boolean
+        eldBigDayExemptionEnabled:
+          default: false
+          description: Flag indicating this driver may use Big Day exemption in ELD
+            logs.
+          type: boolean
+        eldDayStartHour:
+          default: 0
+          description: "`0` indicating midnight-to-midnight ELD driving hours, `12`\
+            \ to indicate noon-to-noon driving hours."
+          type: integer
+        eldExempt:
+          default: false
+          description: Flag indicating this driver is exempt from the Electronic Logging
+            Mandate.
+          type: boolean
+        eldExemptReason:
+          description: Reason that this driver is exempt from the Electronic Logging
+            Mandate (see eldExempt).
+          example: Bad driver
+          type: string
+        eldPcEnabled:
+          default: false
+          description: Flag indicating this driver may select the Personal Conveyance
+            duty status in ELD logs.
+          type: boolean
+        eldYmEnabled:
+          default: false
+          description: Flag indicating this driver may select the Yard Move duty status
+            in ELD logs.
+          type: boolean
+        externalIds:
+          additionalProperties:
+            type: string
+          description: "The [external IDs](https://developers.samsara.com/docs/external-ids)\
+            \ for the given object."
+          example:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          type: object
+        id:
+          description: Samsara ID for the driver.
+          example: "123"
+          type: string
+        isDeactivated:
+          description: A boolean indicating whether or not the driver is deactivated.
+          example: false
+          type: boolean
+        licenseNumber:
+          description: Driver's state issued license number. The combination of this
+            number and `licenseState` must be unique.
+          example: E1234567
+          type: string
+        licenseState:
+          description: Abbreviation of state that issued driver's license.
+          example: CA
+          type: string
+        locale:
+          $ref: '#/components/schemas/DriverLocale'
+        name:
+          description: Driver's name.
+          example: Susan Jones
+          maxLength: 255
+          minLength: 1
+          type: string
+        notes:
+          description: Notes about the driver.
+          example: Also goes by the nickname Furious Fred.
+          maxLength: 4096
+          type: string
+        phone:
+          description: Phone number of the driver.
+          example: "5558234327"
+          maxLength: 255
+          type: string
+        staticAssignedVehicle:
+          $ref: '#/components/schemas/DriverStaticAssignedVehicle'
+        tachographCardNumber:
+          description: Driver's assigned tachograph card number (Europe specific)
+          example: "1000000492436002"
+          type: string
+        tags:
+          description: The tags this driver belongs to.
+          items:
+            $ref: '#/components/schemas/tagTinyResponse'
+          type: array
+        timezone:
+          default: America/Los_Angeles
+          description: "Home terminal timezone, in order to indicate what time zone\
+            \ should be used to calculate the ELD logs. Driver timezones use [IANA\
+            \ timezone database](https://www.iana.org/time-zones) keys (e.g. `America/Los_Angeles`,\
+            \ `America/New_York`, `Europe/London`, etc.). You can find a mapping of\
+            \ common timezone formats to IANA timezone keys [here](https://unicode.org/cldr/charts/latest/supplemental/zone_tzid.html)."
+          example: America/Los_Angeles
+          type: string
+        updatedAtTime:
+          description: The date and time this driver was last updated in RFC 3339
+            format.
+          example: 2019-06-13T19:08:25Z
+          format: date-time
+          type: string
+        username:
+          description: Driver's login username into the driver app. The username may
+            not contain spaces or the '@' symbol. The username must be unique.
+          example: SusanJones
+          maxLength: 189
+          minLength: 1
+          type: string
+        vehicleGroupTag:
+          $ref: '#/components/schemas/DriverVehicleGroupTag'
+      type: object
+    DriverCarrierName:
+      description: Carrier for a given driver.
+      example: Acme Inc.
+      maxLength: 255
+      type: string
+    DriverCarrierSettings:
+      description: "Carrier for a given driver. If the driver's carrier differs from\
+        \ the general organization's carrier settings, the override value is used.\
+        \ Updating this value only updates the override setting for this driver."
+      example:
+        carrierName: Acme Inc.
+        mainOfficeAddress: "1234 Pear St., Scranton, PA 62814"
+        dotNumber: 98231
+      properties:
+        carrierName:
+          description: Carrier for a given driver.
+          example: Acme Inc.
+          maxLength: 255
+          type: string
+        dotNumber:
+          description: "Carrier US DOT Number. If this differs from the general organization's\
+            \ settings, the override value is used. Updating this value only updates\
+            \ the override setting for this driver."
+          example: 98231
+          format: int64
+          type: integer
+        mainOfficeAddress:
+          description: "Main office address for a given driver. If this differs from\
+            \ the general organization's settings, the override value is used. "
+          example: "1234 Pear St., Scranton, PA 62814"
+          maxLength: 255
+          type: string
+      type: object
+    DriverCreatedAtTime:
+      description: The date and time this driver was created in RFC 3339 format.
+      example: 2019-05-18T20:27:35Z
+      format: date-time
+      type: string
+    DriverDotNumber:
+      description: "Carrier US DOT Number. If this differs from the general organization's\
+        \ settings, the override value is used. Updating this value only updates the\
+        \ override setting for this driver."
+      example: 98231
+      format: int64
+      type: integer
+    DriverEldAdverseWeatherExemptionEnabled:
+      default: false
+      description: Flag indicating this driver may use Adverse Weather exemptions
+        in ELD logs.
+      type: boolean
+    DriverEldBigDayExemptionEnabled:
+      default: false
+      description: Flag indicating this driver may use Big Day exemption in ELD logs.
+      type: boolean
+    DriverEldDayStartHour:
+      default: 0
+      description: "`0` indicating midnight-to-midnight ELD driving hours, `12` to\
+        \ indicate noon-to-noon driving hours."
+      type: integer
+    DriverEldExempt:
+      default: false
+      description: Flag indicating this driver is exempt from the Electronic Logging
+        Mandate.
+      type: boolean
+    DriverEldExemptReason:
+      description: Reason that this driver is exempt from the Electronic Logging Mandate
+        (see eldExempt).
+      example: Bad driver
+      type: string
+    DriverEldPcEnabled:
+      default: false
+      description: Flag indicating this driver may select the Personal Conveyance
+        duty status in ELD logs.
+      type: boolean
+    DriverEldYmEnabled:
+      default: false
+      description: Flag indicating this driver may select the Yard Move duty status
+        in ELD logs.
+      type: boolean
+    DriverExternalIds:
+      $ref: '#/components/schemas/externalIds'
+    DriverId:
+      description: Samsara ID for the driver.
+      example: "123"
+      type: string
+    DriverIsDeactivated:
+      description: A boolean indicating whether or not the driver is deactivated.
+      example: false
+      type: boolean
+    DriverLicenseNumber:
+      description: Driver's state issued license number. The combination of this number
+        and `licenseState` must be unique.
+      example: E1234567
+      type: string
+    DriverLicenseState:
+      description: Abbreviation of state that issued driver's license.
+      example: CA
+      type: string
+    DriverLocale:
+      description: Locale override (uncommon). These are specified by ISO 3166-2 country
+        codes for supported locales.
+      enum:
+      - us
+      - at
+      - be
+      - ca
+      - gb
+      - fr
+      - de
+      - ie
+      - it
+      - lu
+      - mx
+      - nl
+      - es
+      - ch
+      type: string
+    DriverMainOfficeAddress:
+      description: "Main office address for a given driver. If this differs from the\
+        \ general organization's settings, the override value is used. "
+      example: "1234 Pear St., Scranton, PA 62814"
+      maxLength: 255
+      type: string
+    DriverName:
+      description: Driver's name.
+      example: Susan Jones
+      maxLength: 255
+      minLength: 1
+      type: string
+    DriverNotes:
+      description: Notes about the driver.
+      example: Also goes by the nickname Furious Fred.
+      maxLength: 4096
+      type: string
+    DriverPassword:
+      description: Password that the driver can use to login to the Samsara driver
+        app.
+      example: aSecurePassword1234
+      type: string
+    DriverPhone:
+      description: Phone number of the driver.
+      example: "5558234327"
+      maxLength: 255
+      type: string
+    DriverResponse:
+      description: A single driver.
+      example:
+        data:
+          eldExemptReason: Bad driver
+          notes: Also goes by the nickname Furious Fred.
+          eldYmEnabled: false
+          timezone: America/Los_Angeles
+          eldDayStartHour: 0
+          locale: null
+          carrierSettings:
+            carrierName: Acme Inc.
+            mainOfficeAddress: "1234 Pear St., Scranton, PA 62814"
+            dotNumber: 98231
+          staticAssignedVehicle:
+            name: "Midwest Truck #4"
+            id: "123456789"
+          tachographCardNumber: "1000000492436002"
+          isDeactivated: false
+          vehicleGroupTag:
+            parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          licenseNumber: E1234567
+          id: "123"
+          eldAdverseWeatherExemptionEnabled: false
+          licenseState: CA
+          externalIds:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          eldExempt: false
+          tags:
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          eldPcEnabled: false
+          eldBigDayExemptionEnabled: false
+          phone: "5558234327"
+          name: Susan Jones
+          updatedAtTime: 2019-06-13T19:08:25Z
+          createdAtTime: 2019-05-18T20:27:35Z
+          username: SusanJones
+      properties:
+        data:
+          $ref: '#/components/schemas/Driver'
+      type: object
+    DriverStaticAssignedVehicle:
+      allOf:
+      - description: Vehicle assigned to the driver for static vehicle assignments.
+          (uncommon).
+        type: object
+      - $ref: '#/components/schemas/vehicleTinyResponse'
+      example:
+        name: "Midwest Truck #4"
+        id: "123456789"
+    DriverStaticAssignedVehicleId:
+      description: ID of vehicle that the driver is permanently assigned to. (uncommon).
+      example: "456"
+      type: string
+    DriverTachographCardNumber:
+      description: Driver's assigned tachograph card number (Europe specific)
+      example: "1000000492436002"
+      type: string
+    DriverTagIds:
+      description: IDs of tags the driver is associated with.
+      items:
+        example: "147"
+        type: string
+      type: array
+    DriverTags:
+      description: The tags this driver belongs to.
+      items:
+        $ref: '#/components/schemas/tagTinyResponse'
+      type: array
+    DriverTimezone:
+      default: America/Los_Angeles
+      description: "Home terminal timezone, in order to indicate what time zone should\
+        \ be used to calculate the ELD logs. Driver timezones use [IANA timezone database](https://www.iana.org/time-zones)\
+        \ keys (e.g. `America/Los_Angeles`, `America/New_York`, `Europe/London`, etc.).\
+        \ You can find a mapping of common timezone formats to IANA timezone keys\
+        \ [here](https://unicode.org/cldr/charts/latest/supplemental/zone_tzid.html)."
+      example: America/Los_Angeles
+      type: string
+    DriverUpdatedAtTime:
+      description: The date and time this driver was last updated in RFC 3339 format.
+      example: 2019-06-13T19:08:25Z
+      format: date-time
+      type: string
+    DriverUsername:
+      description: Driver's login username into the driver app. The username may not
+        contain spaces or the '@' symbol. The username must be unique.
+      example: SusanJones
+      maxLength: 189
+      minLength: 1
+      type: string
+    DriverVehicleGroupTag:
+      allOf:
+      - description: Tag which determines which vehicles a driver will see when selecting
+          vehicles.
+        type: object
+      - $ref: '#/components/schemas/tagTinyResponse'
+      example:
+        parentTagId: "4815"
+        name: East Coast
+        id: "3914"
+    DriverVehicleGroupTagId:
+      description: Tag ID which determines which vehicles a driver will see when selecting
+        vehicles.
+      example: "342417"
+      type: string
+    ListAddressesResponse:
+      description: A list of Addresses and pagination information.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - notes: "Hours of operation: 8am - 6pm; Truck entrance on the Rhode Island\
+            \ street side."
+          formattedAddress: "350 Rhode Island St, San Francisco, CA"
+          geofence:
+            polygon:
+              vertices:
+              - latitude: 37.765363
+                longitude: -122.403098
+              - latitude: 38.765363
+                longitude: -122.403098
+              - latitude: 37.765363
+                longitude: -123.403098
+            circle:
+              latitude: 37.765363
+              radiusMeters: 25
+              longitude: -122.4029238
+          latitude: 37.765363
+          externalIds:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          name: Samsara HQ
+          id: "22408"
+          addressTypes:
+          - yard
+          - yard
+          contacts:
+          - firstName: Jane
+            lastName: Jones
+            id: "22408"
+          - firstName: Jane
+            lastName: Jones
+            id: "22408"
+          longitude: -122.4029238
+          tags:
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+        - notes: "Hours of operation: 8am - 6pm; Truck entrance on the Rhode Island\
+            \ street side."
+          formattedAddress: "350 Rhode Island St, San Francisco, CA"
+          geofence:
+            polygon:
+              vertices:
+              - latitude: 37.765363
+                longitude: -122.403098
+              - latitude: 38.765363
+                longitude: -122.403098
+              - latitude: 37.765363
+                longitude: -123.403098
+            circle:
+              latitude: 37.765363
+              radiusMeters: 25
+              longitude: -122.4029238
+          latitude: 37.765363
+          externalIds:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          name: Samsara HQ
+          id: "22408"
+          addressTypes:
+          - yard
+          - yard
+          contacts:
+          - firstName: Jane
+            lastName: Jones
+            id: "22408"
+          - firstName: Jane
+            lastName: Jones
+            id: "22408"
+          longitude: -122.4029238
+          tags:
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+      properties:
+        data:
+          description: A list of Addresses.
+          items:
+            $ref: '#/components/schemas/Address'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      required:
+      - data
+      - pagination
+      type: object
+    ListContactsResponse:
+      description: A list of contacts.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - firstName: Jane
+          lastName: Jones
+          phone: 111-222-3344
+          id: "22408"
+          email: jane.jones@yahoo.com
+        - firstName: Jane
+          lastName: Jones
+          phone: 111-222-3344
+          id: "22408"
+          email: jane.jones@yahoo.com
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Contact'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      type: object
+    ListDriversResponse:
+      description: A list of drivers.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - eldExemptReason: Bad driver
+          notes: Also goes by the nickname Furious Fred.
+          eldYmEnabled: false
+          timezone: America/Los_Angeles
+          eldDayStartHour: 0
+          locale: null
+          carrierSettings:
+            carrierName: Acme Inc.
+            mainOfficeAddress: "1234 Pear St., Scranton, PA 62814"
+            dotNumber: 98231
+          staticAssignedVehicle:
+            name: "Midwest Truck #4"
+            id: "123456789"
+          tachographCardNumber: "1000000492436002"
+          isDeactivated: false
+          vehicleGroupTag:
+            parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          licenseNumber: E1234567
+          id: "123"
+          eldAdverseWeatherExemptionEnabled: false
+          licenseState: CA
+          externalIds:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          eldExempt: false
+          tags:
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          eldPcEnabled: false
+          eldBigDayExemptionEnabled: false
+          phone: "5558234327"
+          name: Susan Jones
+          updatedAtTime: 2019-06-13T19:08:25Z
+          createdAtTime: 2019-05-18T20:27:35Z
+          username: SusanJones
+        - eldExemptReason: Bad driver
+          notes: Also goes by the nickname Furious Fred.
+          eldYmEnabled: false
+          timezone: America/Los_Angeles
+          eldDayStartHour: 0
+          locale: null
+          carrierSettings:
+            carrierName: Acme Inc.
+            mainOfficeAddress: "1234 Pear St., Scranton, PA 62814"
+            dotNumber: 98231
+          staticAssignedVehicle:
+            name: "Midwest Truck #4"
+            id: "123456789"
+          tachographCardNumber: "1000000492436002"
+          isDeactivated: false
+          vehicleGroupTag:
+            parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          licenseNumber: E1234567
+          id: "123"
+          eldAdverseWeatherExemptionEnabled: false
+          licenseState: CA
+          externalIds:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          eldExempt: false
+          tags:
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          eldPcEnabled: false
+          eldBigDayExemptionEnabled: false
+          phone: "5558234327"
+          name: Susan Jones
+          updatedAtTime: 2019-06-13T19:08:25Z
+          createdAtTime: 2019-05-18T20:27:35Z
+          username: SusanJones
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Driver'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      type: object
+    ListTagsResponse:
+      description: A list of tags.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - addresses:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          assets:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          sensors:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          parentTagId: "4815"
+          parentTag:
+            name: US West Vehicles
+            id: "23502866574"
+          name: California
+          vehicles:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          id: "342417"
+          machines:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          drivers:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+        - addresses:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          assets:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          sensors:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          parentTagId: "4815"
+          parentTag:
+            name: US West Vehicles
+            id: "23502866574"
+          name: California
+          vehicles:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          id: "342417"
+          machines:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          drivers:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      type: object
+    ListUserRolesResponse:
+      description: A list of user roles.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - name: Full Admin
+          id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+        - name: Full Admin
+          id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+      properties:
+        data:
+          description: A list of user roles
+          items:
+            $ref: '#/components/schemas/UserRole'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      type: object
+    ListUsersResponse:
+      description: A list of users.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - roles:
+          - role:
+              name: Full Admin
+              id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+            tag:
+              name: East Coast
+              id: "3914"
+          - role:
+              name: Full Admin
+              id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+            tag:
+              name: East Coast
+              id: "3914"
+          name: Bob Smith
+          id: "123"
+          authType: null
+          email: user@company.com
+        - roles:
+          - role:
+              name: Full Admin
+              id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+            tag:
+              name: East Coast
+              id: "3914"
+          - role:
+              name: Full Admin
+              id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+            tag:
+              name: East Coast
+              id: "3914"
+          name: Bob Smith
+          id: "123"
+          authType: null
+          email: user@company.com
+      properties:
+        data:
+          description: A list of users.
+          items:
+            $ref: '#/components/schemas/User'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      type: object
+    ListVehiclesResponse:
+      description: Response for retrieving a list of vehicles.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - notes: These are notes about this given vehicle.
+          year: "2008"
+          externalIds:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          harshAccelerationSettingType: "off"
+          tags:
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          licensePlate: XHK1234
+          staticAssignedDriver:
+            name: Susan Bob
+            id: "88668"
+          auxInputType2: boom
+          name: Truck A7
+          model: F150
+          vin: 1FUJA6BD31LJ09646
+          auxInputType1: boom
+          id: "112"
+          make: Ford
+        - notes: These are notes about this given vehicle.
+          year: "2008"
+          externalIds:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          harshAccelerationSettingType: "off"
+          tags:
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          licensePlate: XHK1234
+          staticAssignedDriver:
+            name: Susan Bob
+            id: "88668"
+          auxInputType2: boom
+          name: Truck A7
+          model: F150
+          vin: 1FUJA6BD31LJ09646
+          auxInputType1: boom
+          id: "112"
+          make: Ford
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/Vehicle'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      required:
+      - data
+      - pagination
+      type: object
+    ParentTag:
+      description: "If this tag is part a hierarchical tag tree, this is the parent\
+        \ tag, otherwise this will be omitted."
+      example:
+        name: US West Vehicles
+        id: "23502866574"
+      properties:
+        id:
+          description: The object ID.
+          example: "23502866574"
+          type: string
+        name:
+          description: The tag name.
+          example: US West Vehicles
+          type: string
+      required:
+      - id
+      type: object
+    ParentTagId:
+      description: "If this tag is part a hierarchical tag tree, this is the ID of\
+        \ the parent tag, otherwise this will be omitted."
+      example: "4815"
+      type: string
+    ParentTagName:
+      description: The tag name.
+      example: US West Vehicles
+      type: string
+    ReplaceTagRequest:
+      example:
+        addresses:
+        - "23502866574"
+        - "23502866574"
+        assets:
+        - "23502866574"
+        - "23502866574"
+        sensors:
+        - "23502866574"
+        - "23502866574"
+        parentTagId: "4815"
+        name: California
+        vehicles:
+        - "23502866574"
+        - "23502866574"
+        machines:
+        - "23502866574"
+        - "23502866574"
+        drivers:
+        - "23502866574"
+        - "23502866574"
+      properties:
+        addresses:
+          description: The addresses that belong to this tag.
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+        assets:
+          description: "The trailers, unpowered, and powered assets that belong to\
+            \ this tag."
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+        drivers:
+          description: The drivers that belong to this tag.
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+        machines:
+          description: The machines that belong to this tag.
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+        name:
+          description: Name of this tag.
+          example: California
+          maxLength: 191
+          minLength: 1
+          type: string
+        parentTagId:
+          description: "If this tag is part a hierarchical tag tree, this is the ID\
+            \ of the parent tag, otherwise this will be omitted."
+          example: "4815"
+          type: string
+        sensors:
+          description: The sensors that belong to this tag.
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+        vehicles:
+          description: The vehicles that belong to this tag.
+          items:
+            $ref: '#/components/schemas/TaggedObjectId'
+          type: array
+      type: object
+    Tag:
+      allOf:
+      - $ref: '#/components/schemas/TinyTag'
+      - properties:
+          addresses:
+            description: The addresses that belong to this tag.
+            items:
+              $ref: '#/components/schemas/TaggedObject'
+            type: array
+          assets:
+            description: "The trailers, unpowered, and powered assets that belong\
+              \ to this tag."
+            items:
+              $ref: '#/components/schemas/TaggedObject'
+            type: array
+          drivers:
+            description: The drivers that belong to this tag.
+            items:
+              $ref: '#/components/schemas/TaggedObject'
+            type: array
+          machines:
+            description: The machines that belong to thistag.
+            items:
+              $ref: '#/components/schemas/TaggedObject'
+            type: array
+          parentTag:
+            $ref: '#/components/schemas/ParentTag'
+          sensors:
+            description: The sensors that belong to this tag.
+            items:
+              $ref: '#/components/schemas/TaggedObject'
+            type: array
+          vehicles:
+            description: The vehicles that belong to this tag.
+            items:
+              $ref: '#/components/schemas/TaggedObject'
+            type: array
+        type: object
+      example:
+        addresses:
+        - name: Driver Don
+          id: "23502866574"
+        - name: Driver Don
+          id: "23502866574"
+        assets:
+        - name: Driver Don
+          id: "23502866574"
+        - name: Driver Don
+          id: "23502866574"
+        sensors:
+        - name: Driver Don
+          id: "23502866574"
+        - name: Driver Don
+          id: "23502866574"
+        parentTagId: "4815"
+        parentTag:
+          name: US West Vehicles
+          id: "23502866574"
+        name: California
+        vehicles:
+        - name: Driver Don
+          id: "23502866574"
+        - name: Driver Don
+          id: "23502866574"
+        id: "342417"
+        machines:
+        - name: Driver Don
+          id: "23502866574"
+        - name: Driver Don
+          id: "23502866574"
+        drivers:
+        - name: Driver Don
+          id: "23502866574"
+        - name: Driver Don
+          id: "23502866574"
+    TagId:
+      description: Unique Samsara ID of this tag.
+      example: "342417"
+      type: string
+    TagName:
+      description: Name of this tag.
+      example: California
+      maxLength: 191
+      minLength: 1
+      type: string
+    TagResponse:
+      description: A single tag.
+      example:
+        data:
+          addresses:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          assets:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          sensors:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          parentTagId: "4815"
+          parentTag:
+            name: US West Vehicles
+            id: "23502866574"
+          name: California
+          vehicles:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          id: "342417"
+          machines:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+          drivers:
+          - name: Driver Don
+            id: "23502866574"
+          - name: Driver Don
+            id: "23502866574"
+      properties:
+        data:
+          $ref: '#/components/schemas/Tag'
+      type: object
+    TaggedObject:
+      example:
+        name: Driver Don
+        id: "23502866574"
+      properties:
+        id:
+          description: The object ID.
+          example: "23502866574"
+          type: string
+        name:
+          description: The object name.
+          example: Driver Don
+          type: string
+      required:
+      - id
+      type: object
+    TaggedObjectId:
+      description: The object ID.
+      example: "23502866574"
+      type: string
+    TaggedObjectName:
+      description: The object name.
+      example: Driver Don
+      type: string
+    TinyTag:
+      properties:
+        id:
+          description: Unique Samsara ID of this tag.
+          example: "342417"
+          type: string
+        name:
+          description: Name of this tag.
+          example: California
+          maxLength: 191
+          minLength: 1
+          type: string
+        parentTagId:
+          description: "If this tag is part a hierarchical tag tree, this is the ID\
+            \ of the parent tag, otherwise this will be omitted."
+          example: "4815"
+          type: string
+      type: object
+    UpdateAddressRequest:
+      description: A request body to update an Address.
+      example:
+        notes: "Hours of operation: 8am - 6pm; Truck entrance on the Rhode Island\
+          \ street side."
+        formattedAddress: "350 Rhode Island St, San Francisco, CA"
+        geofence:
+          polygon:
+            vertices:
+            - latitude: 37.765363
+              longitude: -122.403098
+            - latitude: 38.765363
+              longitude: -122.403098
+            - latitude: 37.765363
+              longitude: -123.403098
+          circle:
+            latitude: 37.765363
+            radiusMeters: 25
+            longitude: -122.4029238
+        latitude: 37.765363
+        tagIds:
+        - "3914"
+        - "3914"
+        externalIds:
+          maintenanceId: "250020"
+          payrollId: ABFS18600
+        name: Samsara HQ
+        addressTypes:
+        - yard
+        - yard
+        contactIds:
+        - "22408"
+        - "22408"
+        longitude: -122.4029238
+      properties:
+        addressTypes:
+          description: Reporting location type associated with the address (used for
+            ELD reporting purposes).
+          items:
+            enum:
+            - yard
+            - shortHaul
+            example: yard
+            type: string
+          type: array
+        contactIds:
+          description: An array of Contact IDs associated with this Address.
+          items:
+            example: "22408"
+            type: string
+          type: array
+        externalIds:
+          additionalProperties:
+            type: string
+          description: "The [external IDs](https://developers.samsara.com/docs/external-ids)\
+            \ for the given object."
+          example:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          type: object
+        formattedAddress:
+          description: "The full street address for this address/geofence, as it might\
+            \ be recognized by Google Maps."
+          example: "350 Rhode Island St, San Francisco, CA"
+          maxLength: 1024
+          type: string
+        geofence:
+          $ref: '#/components/schemas/AddressGeofence'
+        latitude:
+          description: Latitude of the address. Will be geocoded from `formattedAddress`
+            if not provided.
+          example: 37.765363
+          format: double
+          type: number
+        longitude:
+          description: Longitude of the address. Will be geocoded from `formattedAddress`
+            if not provided.
+          example: -122.4029238
+          format: double
+          type: number
+        name:
+          description: Name of the address.
+          example: Samsara HQ
+          maxLength: 255
+          type: string
+        notes:
+          description: Notes about the address.
+          example: "Hours of operation: 8am - 6pm; Truck entrance on the Rhode Island\
+            \ street side."
+          maxLength: 280
+          type: string
+        tagIds:
+          description: An array of IDs of tags to associate with this address.
+          items:
+            example: "3914"
+            type: string
+          type: array
+      type: object
+    UpdateContactRequest:
+      description: Information for adding a notification contact for alerts.
+      example:
+        firstName: Jane
+        lastName: Jones
+        phone: 111-222-3344
+        email: jane.jones@yahoo.com
+      properties:
+        email:
+          description: Email address of the contact.
+          example: jane.jones@yahoo.com
+          maxLength: 255
+          type: string
+        firstName:
+          description: First name of the contact.
+          example: Jane
+          maxLength: 255
+          type: string
+        lastName:
+          description: Last name of the contact.
+          example: Jones
+          maxLength: 255
+          type: string
+        phone:
+          description: Phone number of the contact.
+          example: 111-222-3344
+          maxLength: 255
+          type: string
+      type: object
+    UpdateDriverRequest:
+      description: Driver that should be updated.
+      example:
+        eldAdverseWeatherExemptionEnabled: false
+        eldExemptReason: Bad driver
+        notes: Also goes by the nickname Furious Fred.
+        eldYmEnabled: false
+        licenseState: CA
+        staticAssignedVehicleId: "456"
+        timezone: America/Los_Angeles
+        eldDayStartHour: 0
+        tagIds:
+        - "147"
+        - "147"
+        externalIds:
+          maintenanceId: "250020"
+          payrollId: ABFS18600
+        vehicleGroupTagId: "342417"
+        eldExempt: false
+        locale: null
+        carrierSettings:
+          carrierName: Acme Inc.
+          mainOfficeAddress: "1234 Pear St., Scranton, PA 62814"
+          dotNumber: 98231
+        eldPcEnabled: false
+        eldBigDayExemptionEnabled: false
+        tachographCardNumber: "1000000492436002"
+        password: aSecurePassword1234
+        phone: "5558234327"
+        name: Susan Jones
+        licenseNumber: E1234567
+        username: SusanJones
+      properties:
+        carrierSettings:
+          $ref: '#/components/schemas/DriverCarrierSettings'
+        eldAdverseWeatherExemptionEnabled:
+          default: false
+          description: Flag indicating this driver may use Adverse Weather exemptions
+            in ELD logs.
+          type: boolean
+        eldBigDayExemptionEnabled:
+          default: false
+          description: Flag indicating this driver may use Big Day exemption in ELD
+            logs.
+          type: boolean
+        eldDayStartHour:
+          default: 0
+          description: "`0` indicating midnight-to-midnight ELD driving hours, `12`\
+            \ to indicate noon-to-noon driving hours."
+          type: integer
+        eldExempt:
+          default: false
+          description: Flag indicating this driver is exempt from the Electronic Logging
+            Mandate.
+          type: boolean
+        eldExemptReason:
+          description: Reason that this driver is exempt from the Electronic Logging
+            Mandate (see eldExempt).
+          example: Bad driver
+          type: string
+        eldPcEnabled:
+          default: false
+          description: Flag indicating this driver may select the Personal Conveyance
+            duty status in ELD logs.
+          type: boolean
+        eldYmEnabled:
+          default: false
+          description: Flag indicating this driver may select the Yard Move duty status
+            in ELD logs.
+          type: boolean
+        externalIds:
+          additionalProperties:
+            type: string
+          description: "The [external IDs](https://developers.samsara.com/docs/external-ids)\
+            \ for the given object."
+          example:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          type: object
+        licenseNumber:
+          description: Driver's state issued license number. The combination of this
+            number and `licenseState` must be unique.
+          example: E1234567
+          type: string
+        licenseState:
+          description: Abbreviation of state that issued driver's license.
+          example: CA
+          type: string
+        locale:
+          $ref: '#/components/schemas/DriverLocale'
+        name:
+          description: Driver's name.
+          example: Susan Jones
+          maxLength: 255
+          minLength: 1
+          type: string
+        notes:
+          description: Notes about the driver.
+          example: Also goes by the nickname Furious Fred.
+          maxLength: 4096
+          type: string
+        password:
+          description: Password that the driver can use to login to the Samsara driver
+            app.
+          example: aSecurePassword1234
+          type: string
+        phone:
+          description: Phone number of the driver.
+          example: "5558234327"
+          maxLength: 255
+          type: string
+        staticAssignedVehicleId:
+          description: ID of vehicle that the driver is permanently assigned to. (uncommon).
+          example: "456"
+          type: string
+        tachographCardNumber:
+          description: Driver's assigned tachograph card number (Europe specific)
+          example: "1000000492436002"
+          type: string
+        tagIds:
+          description: IDs of tags the driver is associated with.
+          items:
+            example: "147"
+            type: string
+          type: array
+        timezone:
+          default: America/Los_Angeles
+          description: "Home terminal timezone, in order to indicate what time zone\
+            \ should be used to calculate the ELD logs. Driver timezones use [IANA\
+            \ timezone database](https://www.iana.org/time-zones) keys (e.g. `America/Los_Angeles`,\
+            \ `America/New_York`, `Europe/London`, etc.). You can find a mapping of\
+            \ common timezone formats to IANA timezone keys [here](https://unicode.org/cldr/charts/latest/supplemental/zone_tzid.html)."
+          example: America/Los_Angeles
+          type: string
+        username:
+          description: Driver's login username into the driver app. The username may
+            not contain spaces or the '@' symbol. The username must be unique.
+          example: SusanJones
+          maxLength: 189
+          minLength: 1
+          type: string
+        vehicleGroupTagId:
+          description: Tag ID which determines which vehicles a driver will see when
+            selecting vehicles.
+          example: "342417"
+          type: string
+      type: object
+    UpdateUserRequest:
+      description: The user update arguments
+      example:
+        roles:
+        - tagId: "3914"
+          roleId: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+        - tagId: "3914"
+          roleId: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+        name: Bob Smith
+        authType: null
+      properties:
+        authType:
+          $ref: '#/components/schemas/UserAuthType'
+        name:
+          description: The first and last name of the user.
+          example: Bob Smith
+          type: string
+        roles:
+          description: "The list of roles that applies to this user. A user may have\
+            \ \"organizational\" roles, which apply to the user at the organizational\
+            \ level, and \"tag-specific\" roles, which apply to the user for a given\
+            \ tag."
+          items:
+            $ref: '#/components/schemas/UserRoleAssignmentRequest'
+          type: array
+      type: object
+    UpdateVehicleRequest:
+      description: All the editable portions of the vehicle object.
+      example:
+        staticAssignedDriverId: "123"
+        engineHours: 10943
+        licensePlate: XHK1234
+        notes: These are notes about this given vehicle.
+        tagIds:
+        - "321"
+        - "321"
+        auxInputType2: boom
+        externalIds:
+          maintenanceId: "250020"
+          payrollId: ABFS18600
+        name: Truck A7
+        odometerMeters: 9182
+        vin: 1FUJA6BD31LJ09646
+        auxInputType1: boom
+        harshAccelerationSettingType: "off"
+      properties:
+        auxInputType1:
+          $ref: '#/components/schemas/VehicleAuxInputType'
+        auxInputType2:
+          $ref: '#/components/schemas/VehicleAuxInputType'
+        engineHours:
+          description: "A manual override for the vehicle's engine hours. You may\
+            \ only override a vehicle's engine hours if it cannot be read from on-board\
+            \ diagnostics. When you provide a manual engine hours override, Samsara\
+            \ will begin updating a vehicle's engine hours based on when the Samsara\
+            \ Vehicle Gateway is recieving power or not."
+          example: 10943
+          format: int64
+          type: integer
+        externalIds:
+          additionalProperties:
+            type: string
+          description: "The [external IDs](https://developers.samsara.com/docs/external-ids)\
+            \ for the given object."
+          example:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          type: object
+        harshAccelerationSettingType:
+          $ref: '#/components/schemas/VehicleHarshAccelerationSettingType'
+        licensePlate:
+          description: "The license plate of the Vehicle. **By default**: empty. Can\
+            \ be set or updated through the Samsara Dashboard or the API at any time."
+          example: XHK1234
+          maxLength: 12
+          type: string
+        name:
+          description: "The human-readable name of the Vehicle. This is set by a fleet\
+            \ administrator and will appear in both Samsara’s cloud dashboard as well\
+            \ as the Samsara Driver mobile app. **By default**, this name is the serial\
+            \ number of the Samsara Vehicle Gateway. It can be set or updated through\
+            \ the Samsara Dashboard or through the API at any time."
+          example: Truck A7
+          type: string
+        notes:
+          default: ""
+          description: These are generic notes about the Vehicle. Empty by default.
+            Can be set or updated through the Samsara Dashboard or the API at any
+            time.
+          example: These are notes about this given vehicle.
+          maxLength: 255
+          type: string
+        odometerMeters:
+          description: "A manual override for the vehicle's odometer. You may only\
+            \ override a vehicle's odometer if it cannot be read from on-board diagnostics.\
+            \ When you provide a manual odometer override, Samsara will begin updating\
+            \ a vehicle's odometer using GPS distance traveled since this override\
+            \ was set. See [here](https://kb.samsara.com/hc/en-us/articles/115005273667)\
+            \ for more details."
+          example: 9182
+          format: int64
+          type: integer
+        staticAssignedDriverId:
+          description: ID for the static assigned driver of the vehicle.
+          example: "123"
+          type: string
+        tagIds:
+          description: An array of IDs of tags to associate with this vehicle.
+          items:
+            example: "321"
+            type: string
+          type: array
+        vin:
+          description: "The VIN of the Vehicle. Most of the time, this will be automatically\
+            \ read from the engine computer by the Samsara Vehicle Gateway. It will\
+            \ be empty if it cannot be read. It can be set or updated through the\
+            \ Samsara Dashboard or the API at any time."
+          example: 1FUJA6BD31LJ09646
+          maxLength: 17
+          minLength: 11
+          type: string
+      type: object
+    User:
+      description: A user object.
+      example:
+        roles:
+        - role:
+            name: Full Admin
+            id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+          tag:
+            name: East Coast
+            id: "3914"
+        - role:
+            name: Full Admin
+            id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+          tag:
+            name: East Coast
+            id: "3914"
+        name: Bob Smith
+        id: "123"
+        authType: null
+        email: user@company.com
+      properties:
+        authType:
+          $ref: '#/components/schemas/UserAuthType'
+        email:
+          description: The email address of this user.
+          example: user@company.com
+          type: string
+        id:
+          description: ID of the user.
+          example: "123"
+          type: string
+        name:
+          description: The first and last name of the user.
+          example: Bob Smith
+          type: string
+        roles:
+          description: "The list of roles that applies to this user. A user may have\
+            \ \"organizational\" roles, which apply to the user at the organizational\
+            \ level, and \"tag-specific\" roles, which apply to the user for a given\
+            \ tag."
+          items:
+            $ref: '#/components/schemas/UserRoleAssignment'
+          type: array
+      required:
+      - authType
+      - email
+      - id
+      - name
+      - roles
+      type: object
+    UserAuthType:
+      description: The authentication type the user uses to authenticate. To use SAML
+        this organization must have a configured SAML integration.
+      enum:
+      - default
+      - saml
+      type: string
+    UserEmail:
+      description: The email address of this user.
+      example: user@company.com
+      type: string
+    UserId:
+      description: ID of the user.
+      example: "123"
+      type: string
+    UserName:
+      description: The first and last name of the user.
+      example: Bob Smith
+      type: string
+    UserResponse:
+      description: A single user.
+      example:
+        data:
+          roles:
+          - role:
+              name: Full Admin
+              id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+            tag:
+              name: East Coast
+              id: "3914"
+          - role:
+              name: Full Admin
+              id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+            tag:
+              name: East Coast
+              id: "3914"
+          name: Bob Smith
+          id: "123"
+          authType: null
+          email: user@company.com
+      properties:
+        data:
+          $ref: '#/components/schemas/User'
+      type: object
+    UserRole:
+      description: A user role object.
+      example:
+        name: Full Admin
+        id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+      properties:
+        id:
+          description: The unique ID for the role.
+          example: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+          type: string
+        name:
+          description: The name of the role.
+          example: Full Admin
+          type: string
+      type: object
+    UserRoleAssignment:
+      description: "A role that applies to a user. If the role has a `tag`, then the\
+        \ role applies for that tag. If there is no `tag`, then the role applies at\
+        \ the organizational level. A user may have many tag-specific roles, but may\
+        \ only have one organizational level role. If the organizational level role\
+        \ has higher privileges than a tag-specific role, then the organizational\
+        \ role privileges will take precedence."
+      example:
+        role:
+          name: Full Admin
+          id: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+        tag:
+          name: East Coast
+          id: "3914"
+      properties:
+        role:
+          $ref: '#/components/schemas/UserRole'
+        tag:
+          $ref: '#/components/schemas/UserRoleAssignment_tag'
+      type: object
+    UserRoleAssignmentRequest:
+      description: "A role that applies to a user. If the role has a `tagId`, then\
+        \ the role applies for that tag. If there is no `tagId`, then the role applies\
+        \ at the organizational level. A user may have many tag-specific roles, but\
+        \ may only have one organizational role. If the organizational level role\
+        \ has higher privileges than a tag-specific role, then the organizational\
+        \ role privileges will take precedence."
+      example:
+        tagId: "3914"
+        roleId: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+      properties:
+        roleId:
+          description: The unique ID for the role.
+          example: 8a9371af-82d1-4158-bf91-4ecc8d3a114c
+          type: string
+        tagId:
+          description: ID of the tag this role applies to.
+          example: "3914"
+          type: string
+      type: object
+    UserRoles:
+      description: "The list of roles that applies to this user. A user may have \"\
+        organizational\" roles, which apply to the user at the organizational level,\
+        \ and \"tag-specific\" roles, which apply to the user for a given tag."
+      items:
+        $ref: '#/components/schemas/UserRoleAssignment'
+      type: array
+    UserRolesRequest:
+      description: "The list of roles that applies to this user. A user may have \"\
+        organizational\" roles, which apply to the user at the organizational level,\
+        \ and \"tag-specific\" roles, which apply to the user for a given tag."
+      items:
+        $ref: '#/components/schemas/UserRoleAssignmentRequest'
+      type: array
+    Vehicle:
+      description: The vehicle object.
+      example:
+        notes: These are notes about this given vehicle.
+        year: "2008"
+        externalIds:
+          maintenanceId: "250020"
+          payrollId: ABFS18600
+        harshAccelerationSettingType: "off"
+        tags:
+        - parentTagId: "4815"
+          name: East Coast
+          id: "3914"
+        - parentTagId: "4815"
+          name: East Coast
+          id: "3914"
+        licensePlate: XHK1234
+        staticAssignedDriver:
+          name: Susan Bob
+          id: "88668"
+        auxInputType2: boom
+        name: Truck A7
+        model: F150
+        vin: 1FUJA6BD31LJ09646
+        auxInputType1: boom
+        id: "112"
+        make: Ford
+      properties:
+        auxInputType1:
+          $ref: '#/components/schemas/VehicleAuxInputType'
+        auxInputType2:
+          $ref: '#/components/schemas/VehicleAuxInputType'
+        externalIds:
+          additionalProperties:
+            type: string
+          description: "The [external IDs](https://developers.samsara.com/docs/external-ids)\
+            \ for the given object."
+          example:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          type: object
+        harshAccelerationSettingType:
+          $ref: '#/components/schemas/VehicleHarshAccelerationSettingType'
+        id:
+          description: The unique Samsara ID of the Vehicle. This is automatically
+            generated when the Vehicle object is created. It cannot be changed.
+          example: "112"
+          type: string
+        licensePlate:
+          description: "The license plate of the Vehicle. **By default**: empty. Can\
+            \ be set or updated through the Samsara Dashboard or the API at any time."
+          example: XHK1234
+          maxLength: 12
+          type: string
+        make:
+          description: The Vehicle’s manufacturing make. Automatically read from the
+            engine computer if available. Empty if not available. Cannot be manually
+            set.
+          example: Ford
+          maxLength: 255
+          type: string
+        model:
+          description: The Vehicle’s manufacturing model. Automatically read from
+            the engine computer if available. Empty if not available. Cannot be manually
+            set.
+          example: F150
+          maxLength: 255
+          type: string
+        name:
+          description: "The human-readable name of the Vehicle. This is set by a fleet\
+            \ administrator and will appear in both Samsara’s cloud dashboard as well\
+            \ as the Samsara Driver mobile app. **By default**, this name is the serial\
+            \ number of the Samsara Vehicle Gateway. It can be set or updated through\
+            \ the Samsara Dashboard or through the API at any time."
+          example: Truck A7
+          type: string
+        notes:
+          default: ""
+          description: These are generic notes about the Vehicle. Empty by default.
+            Can be set or updated through the Samsara Dashboard or the API at any
+            time.
+          example: These are notes about this given vehicle.
+          maxLength: 255
+          type: string
+        staticAssignedDriver:
+          $ref: '#/components/schemas/driverTinyResponse'
+        tags:
+          description: "The list of [tags](https://kb.samsara.com/hc/en-us/articles/360026674631-Using-Tags-and-Tag-Nesting)\
+            \ associated with the Vehicle. **By default**: empty. Can be set or updated\
+            \ through the Samsara Dashboard or the API at any time."
+          items:
+            $ref: '#/components/schemas/tagTinyResponse'
+          type: array
+        vin:
+          description: "The VIN of the Vehicle. Most of the time, this will be automatically\
+            \ read from the engine computer by the Samsara Vehicle Gateway. It will\
+            \ be empty if it cannot be read. It can be set or updated through the\
+            \ Samsara Dashboard or the API at any time."
+          example: 1FUJA6BD31LJ09646
+          maxLength: 17
+          minLength: 11
+          type: string
+        year:
+          description: The Vehicle’s manufacturing model. Automatically read from
+            the engine computer if available. Empty if not available. Cannot be manually
+            set.
+          example: "2008"
+          type: string
+      required:
+      - id
+      type: object
+    VehicleAuxInputType:
+      description: "The type of [auxiliary input](https://kb.samsara.com/hc/en-us/articles/232232368-Auxiliary-Inputs)\
+        \ configured for this Vehicle. Once configured, these inputs will generate\
+        \ dynamic, time-series data that will be available to view in the Samsara\
+        \ Dashboard. **By default**: empty. This can be set or updated through the\
+        \ Samsara Dashboard or the API at any time."
+      enum:
+      - none
+      - emergencyLights
+      - emergencyAlarm
+      - stopPaddle
+      - powerTakeOff
+      - plow
+      - sweeper
+      - salter
+      - reefer
+      - door
+      - boom
+      - auxiliaryEngine
+      - generator
+      - eightWayLights
+      example: boom
+      type: string
+    VehicleAuxInputType1:
+      $ref: '#/components/schemas/VehicleAuxInputType'
+    VehicleAuxInputType2:
+      $ref: '#/components/schemas/VehicleAuxInputType'
+    VehicleEngineHours:
+      description: "A manual override for the vehicle's engine hours. You may only\
+        \ override a vehicle's engine hours if it cannot be read from on-board diagnostics.\
+        \ When you provide a manual engine hours override, Samsara will begin updating\
+        \ a vehicle's engine hours based on when the Samsara Vehicle Gateway is recieving\
+        \ power or not."
+      example: 10943
+      format: int64
+      type: integer
+    VehicleExternalIds:
+      $ref: '#/components/schemas/externalIds'
+    VehicleHarshAccelerationSettingType:
+      description: "The harsh acceleration setting type. This setting influences the\
+        \ acceleration sensitivity from which a [harsh event](https://kb.samsara.com/hc/en-us/articles/360006938891-Harsh-Events)\
+        \ is triggered. **By default**, this setting is inferred by the Samsara Vehicle\
+        \ Gateway from the engine computer, but it may be set or updated through the\
+        \ Samsara Dashboard or the API at any time. If set to `off`, then no acceleration\
+        \ based harsh events are triggered for the vehicle."
+      enum:
+      - passengerCar
+      - lightTruck
+      - heavyDuty
+      - "off"
+      - automatic
+      example: "off"
+      type: string
+    VehicleId:
+      description: The unique Samsara ID of the Vehicle. This is automatically generated
+        when the Vehicle object is created. It cannot be changed.
+      example: "112"
+      type: string
+    VehicleLicensePlate:
+      description: "The license plate of the Vehicle. **By default**: empty. Can be\
+        \ set or updated through the Samsara Dashboard or the API at any time."
+      example: XHK1234
+      maxLength: 12
+      type: string
+    VehicleLocation:
+      description: Vehicle location event.
+      example:
+        heading: 120
+        latitude: 122.142
+        time: 2020-01-27T07:06:25Z
+        speed: 48.3
+        longitude: -93.343
+        reverseGeo:
+          formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+      properties:
+        heading:
+          description: Heading of the vehicle in degrees.
+          example: 120
+          format: double
+          type: number
+        latitude:
+          description: GPS latitude represented in degrees
+          example: 122.142
+          format: double
+          type: number
+        longitude:
+          description: GPS longitude represented in degrees
+          example: -93.343
+          format: double
+          type: number
+        reverseGeo:
+          $ref: '#/components/schemas/VehicleLocationReverseGeo'
+        speed:
+          description: GPS speed of the vehicle in miles per hour.
+          example: 48.3
+          format: double
+          type: number
+        time:
+          description: "UTC timestamp in RFC 3339 format. Example: `2020-01-27T07:06:25Z`."
+          example: 2020-01-27T07:06:25Z
+          format: date-time
+          type: string
+      required:
+      - latitude
+      - longitude
+      - time
+      type: object
+    VehicleLocationHeading:
+      description: Heading of the vehicle in degrees.
+      example: 120
+      format: double
+      type: number
+    VehicleLocationLatitude:
+      description: GPS latitude represented in degrees
+      example: 122.142
+      format: double
+      type: number
+    VehicleLocationLongitude:
+      description: GPS longitude represented in degrees
+      example: -93.343
+      format: double
+      type: number
+    VehicleLocationReverseGeo:
+      description: Reverse geocoded information.
+      example:
+        formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+      properties:
+        formattedLocation:
+          description: Formatted address of the reverse geocoding data.
+          example: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+          type: string
+      type: object
+    VehicleLocationSpeed:
+      description: GPS speed of the vehicle in miles per hour.
+      example: 48.3
+      format: double
+      type: number
+    VehicleLocationTime:
+      $ref: '#/components/schemas/time'
+    VehicleLocationsListResponse:
+      description: List of vehicle location events and pagination info.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - name: Truck A7
+          locations:
+          - heading: 120
+            latitude: 122.142
+            time: 2020-01-27T07:06:25Z
+            speed: 48.3
+            longitude: -93.343
+            reverseGeo:
+              formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+          - heading: 120
+            latitude: 122.142
+            time: 2020-01-27T07:06:25Z
+            speed: 48.3
+            longitude: -93.343
+            reverseGeo:
+              formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+          id: "112"
+        - name: Truck A7
+          locations:
+          - heading: 120
+            latitude: 122.142
+            time: 2020-01-27T07:06:25Z
+            speed: 48.3
+            longitude: -93.343
+            reverseGeo:
+              formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+          - heading: 120
+            latitude: 122.142
+            time: 2020-01-27T07:06:25Z
+            speed: 48.3
+            longitude: -93.343
+            reverseGeo:
+              formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+          id: "112"
+      properties:
+        data:
+          description: A list of vehicles and an array of location events for each
+            vehicle.
+          items:
+            $ref: '#/components/schemas/VehicleLocationsListResponse_data_inner'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      required:
+      - data
+      - pagination
+      type: object
+    VehicleLocationsResponse:
+      description: Most recent vehicle locations and pagination info.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - name: Truck A7
+          location:
+            heading: 120
+            latitude: 122.142
+            time: 2020-01-27T07:06:25Z
+            speed: 48.3
+            longitude: -93.343
+            reverseGeo:
+              formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+          id: "112"
+        - name: Truck A7
+          location:
+            heading: 120
+            latitude: 122.142
+            time: 2020-01-27T07:06:25Z
+            speed: 48.3
+            longitude: -93.343
+            reverseGeo:
+              formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+          id: "112"
+      properties:
+        data:
+          description: List of the most recent locations for the specified vehicles.
+          items:
+            $ref: '#/components/schemas/VehicleLocationsResponse_data_inner'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      required:
+      - data
+      - pagination
+      type: object
+    VehicleMake:
+      description: The Vehicle’s manufacturing make. Automatically read from the engine
+        computer if available. Empty if not available. Cannot be manually set.
+      example: Ford
+      maxLength: 255
+      type: string
+    VehicleModel:
+      description: The Vehicle’s manufacturing model. Automatically read from the
+        engine computer if available. Empty if not available. Cannot be manually set.
+      example: F150
+      maxLength: 255
+      type: string
+    VehicleName:
+      description: "The human-readable name of the Vehicle. This is set by a fleet\
+        \ administrator and will appear in both Samsara’s cloud dashboard as well\
+        \ as the Samsara Driver mobile app. **By default**, this name is the serial\
+        \ number of the Samsara Vehicle Gateway. It can be set or updated through\
+        \ the Samsara Dashboard or through the API at any time."
+      example: Truck A7
+      type: string
+    VehicleNotes:
+      default: ""
+      description: These are generic notes about the Vehicle. Empty by default. Can
+        be set or updated through the Samsara Dashboard or the API at any time.
+      example: These are notes about this given vehicle.
+      maxLength: 255
+      type: string
+    VehicleOdometerMeters:
+      description: "A manual override for the vehicle's odometer. You may only override\
+        \ a vehicle's odometer if it cannot be read from on-board diagnostics. When\
+        \ you provide a manual odometer override, Samsara will begin updating a vehicle's\
+        \ odometer using GPS distance traveled since this override was set. See [here](https://kb.samsara.com/hc/en-us/articles/115005273667)\
+        \ for more details."
+      example: 9182
+      format: int64
+      type: integer
+    VehicleResponse:
+      description: A single vehicle.
+      example:
+        data:
+          notes: These are notes about this given vehicle.
+          year: "2008"
+          externalIds:
+            maintenanceId: "250020"
+            payrollId: ABFS18600
+          harshAccelerationSettingType: "off"
+          tags:
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          - parentTagId: "4815"
+            name: East Coast
+            id: "3914"
+          licensePlate: XHK1234
+          staticAssignedDriver:
+            name: Susan Bob
+            id: "88668"
+          auxInputType2: boom
+          name: Truck A7
+          model: F150
+          vin: 1FUJA6BD31LJ09646
+          auxInputType1: boom
+          id: "112"
+          make: Ford
+      properties:
+        data:
+          $ref: '#/components/schemas/Vehicle'
+      required:
+      - data
+      type: object
+    VehicleStaticAssignedDriver:
+      $ref: '#/components/schemas/driverTinyResponse'
+    VehicleStaticAssignedDriverId:
+      description: ID for the static assigned driver of the vehicle.
+      example: "123"
+      type: string
+    VehicleStatsEngineState:
+      description: Vehicle engine state event.
+      example:
+        time: 2020-01-27T07:06:25Z
+        value: "On"
+      properties:
+        time:
+          description: "UTC timestamp in RFC 3339 format. Example: `2020-01-27T07:06:25Z`."
+          example: 2020-01-27T07:06:25Z
+          format: date-time
+          type: string
+        value:
+          description: The state of the engine.
+          enum:
+          - "Off"
+          - "On"
+          - Idle
+          example: "On"
+          type: string
+      required:
+      - time
+      - value
+      type: object
+    VehicleStatsFuelPercent:
+      description: Vehicle fuel percentage reading.
+      example:
+        time: 2020-01-27T07:06:25Z
+        value: 54
+      properties:
+        time:
+          description: "UTC timestamp in RFC 3339 format. Example: `2020-01-27T07:06:25Z`."
+          example: 2020-01-27T07:06:25Z
+          format: date-time
+          type: string
+        value:
+          description: "The engine fuel level in percentage points (e.g. `99`, `50`,\
+            \ etc)."
+          example: 54
+          format: int64
+          type: integer
+      required:
+      - time
+      - value
+      type: object
+    VehicleStatsGpsDistanceMeters:
+      description: Vehicle GPS distance event.
+      example:
+        time: 2020-01-27T07:06:25Z
+        value: 81029.591434899
+      properties:
+        time:
+          description: "UTC timestamp in RFC 3339 format. Example: `2020-01-27T07:06:25Z`."
+          example: 2020-01-27T07:06:25Z
+          format: date-time
+          type: string
+        value:
+          description: "Number of meters the vehicle has traveled since the gateway\
+            \ was installed, based on GPS calculations."
+          example: 81029.591434899
+          format: double
+          type: number
+      required:
+      - time
+      - value
+      type: object
+    VehicleStatsGpsOdometerMeters:
+      description: Vehicle GPS odometer event.
+      example:
+        time: 2020-01-27T07:06:25Z
+        value: 14010293
+      properties:
+        time:
+          description: "UTC timestamp in RFC 3339 format. Example: `2020-01-27T07:06:25Z`."
+          example: 2020-01-27T07:06:25Z
+          format: date-time
+          type: string
+        value:
+          description: Number of meters the vehicle has traveled according to the
+            GPS calculations and the manually-specified odometer reading.
+          example: 14010293
+          format: int64
+          type: integer
+      required:
+      - time
+      - value
+      type: object
+    VehicleStatsListResponse:
+      description: List of vehicle stat events and pagination info.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - fuelPercents:
+          - time: 2020-01-27T07:06:25Z
+            value: 54
+          - time: 2020-01-27T07:06:25Z
+            value: 54
+          obdEngineSeconds:
+          - time: 2020-01-27T07:06:25Z
+            value: 9723103
+          - time: 2020-01-27T07:06:25Z
+            value: 9723103
+          engineStates:
+          - time: 2020-01-27T07:06:25Z
+            value: "On"
+          - time: 2020-01-27T07:06:25Z
+            value: "On"
+          gpsDistanceMeters:
+          - time: 2020-01-27T07:06:25Z
+            value: 81029.591434899
+          - time: 2020-01-27T07:06:25Z
+            value: 81029.591434899
+          gpsOdometerMeters:
+          - time: 2020-01-27T07:06:25Z
+            value: 14010293
+          - time: 2020-01-27T07:06:25Z
+            value: 14010293
+          obdOdometerMeters:
+          - time: 2020-01-27T07:06:25Z
+            value: 14010293
+          - time: 2020-01-27T07:06:25Z
+            value: 14010293
+          name: Truck A7
+          id: "112"
+        - fuelPercents:
+          - time: 2020-01-27T07:06:25Z
+            value: 54
+          - time: 2020-01-27T07:06:25Z
+            value: 54
+          obdEngineSeconds:
+          - time: 2020-01-27T07:06:25Z
+            value: 9723103
+          - time: 2020-01-27T07:06:25Z
+            value: 9723103
+          engineStates:
+          - time: 2020-01-27T07:06:25Z
+            value: "On"
+          - time: 2020-01-27T07:06:25Z
+            value: "On"
+          gpsDistanceMeters:
+          - time: 2020-01-27T07:06:25Z
+            value: 81029.591434899
+          - time: 2020-01-27T07:06:25Z
+            value: 81029.591434899
+          gpsOdometerMeters:
+          - time: 2020-01-27T07:06:25Z
+            value: 14010293
+          - time: 2020-01-27T07:06:25Z
+            value: 14010293
+          obdOdometerMeters:
+          - time: 2020-01-27T07:06:25Z
+            value: 14010293
+          - time: 2020-01-27T07:06:25Z
+            value: 14010293
+          name: Truck A7
+          id: "112"
+      properties:
+        data:
+          description: A list of vehicles and an array of stat events for each vehicle.
+          items:
+            $ref: '#/components/schemas/VehicleStatsListResponse_data_inner'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      required:
+      - data
+      - pagination
+      type: object
+    VehicleStatsObdEngineSeconds:
+      description: Vehicle OBD engine seconds reading.
+      example:
+        time: 2020-01-27T07:06:25Z
+        value: 9723103
+      properties:
+        time:
+          description: "UTC timestamp in RFC 3339 format. Example: `2020-01-27T07:06:25Z`."
+          example: 2020-01-27T07:06:25Z
+          format: date-time
+          type: string
+        value:
+          description: Number of seconds the vehicle's engine has been on according
+            to the on-baord diagnostics.
+          example: 9723103
+          format: int64
+          type: integer
+      required:
+      - time
+      - value
+      type: object
+    VehicleStatsObdOdometerMeters:
+      description: Vehicle OBD odometer reading.
+      example:
+        time: 2020-01-27T07:06:25Z
+        value: 14010293
+      properties:
+        time:
+          description: "UTC timestamp in RFC 3339 format. Example: `2020-01-27T07:06:25Z`."
+          example: 2020-01-27T07:06:25Z
+          format: date-time
+          type: string
+        value:
+          description: Number of meters the vehicle has traveled according to the
+            on-board diagnostics.
+          example: 14010293
+          format: int64
+          type: integer
+      required:
+      - time
+      - value
+      type: object
+    VehicleStatsResponse:
+      description: Most recent vehicle stats and pagination info.
+      example:
+        pagination:
+          hasNextPage: true
+          endCursor: MjkY
+        data:
+        - fuelPercent:
+            time: 2020-01-27T07:06:25Z
+            value: 54
+          obdEngineSeconds:
+            time: 2020-01-27T07:06:25Z
+            value: 9723103
+          engineState:
+            time: 2020-01-27T07:06:25Z
+            value: "On"
+          gpsDistanceMeters:
+            time: 2020-01-27T07:06:25Z
+            value: 81029.591434899
+          gpsOdometerMeters:
+            time: 2020-01-27T07:06:25Z
+            value: 14010293
+          obdOdometerMeters:
+            time: 2020-01-27T07:06:25Z
+            value: 14010293
+          name: Truck A7
+          id: "112"
+        - fuelPercent:
+            time: 2020-01-27T07:06:25Z
+            value: 54
+          obdEngineSeconds:
+            time: 2020-01-27T07:06:25Z
+            value: 9723103
+          engineState:
+            time: 2020-01-27T07:06:25Z
+            value: "On"
+          gpsDistanceMeters:
+            time: 2020-01-27T07:06:25Z
+            value: 81029.591434899
+          gpsOdometerMeters:
+            time: 2020-01-27T07:06:25Z
+            value: 14010293
+          obdOdometerMeters:
+            time: 2020-01-27T07:06:25Z
+            value: 14010293
+          name: Truck A7
+          id: "112"
+      properties:
+        data:
+          description: List of the most recent stats for the specified vehicles and
+            stat types.
+          items:
+            $ref: '#/components/schemas/VehicleStatsResponse_data_inner'
+          type: array
+        pagination:
+          $ref: '#/components/schemas/paginationResponse'
+      required:
+      - data
+      - pagination
+      type: object
+    VehicleStatsTime:
+      $ref: '#/components/schemas/time'
+    VehicleTagIds:
+      description: An array of IDs of tags to associate with this vehicle.
+      items:
+        example: "321"
+        type: string
+      type: array
+    VehicleTags:
+      description: "The list of [tags](https://kb.samsara.com/hc/en-us/articles/360026674631-Using-Tags-and-Tag-Nesting)\
+        \ associated with the Vehicle. **By default**: empty. Can be set or updated\
+        \ through the Samsara Dashboard or the API at any time."
+      items:
+        $ref: '#/components/schemas/tagTinyResponse'
+      type: array
+    VehicleVin:
+      description: "The VIN of the Vehicle. Most of the time, this will be automatically\
+        \ read from the engine computer by the Samsara Vehicle Gateway. It will be\
+        \ empty if it cannot be read. It can be set or updated through the Samsara\
+        \ Dashboard or the API at any time."
+      example: 1FUJA6BD31LJ09646
+      maxLength: 17
+      minLength: 11
+      type: string
+    VehicleYear:
+      description: The Vehicle’s manufacturing model. Automatically read from the
+        engine computer if available. Empty if not available. Cannot be manually set.
+      example: "2008"
+      type: string
+    contactTinyResponse:
+      description: A minified contact object
+      example:
+        firstName: Jane
+        lastName: Jones
+        id: "22408"
+      properties:
+        firstName:
+          description: First name of the contact.
+          example: Jane
+          type: string
+        id:
+          description: ID of the contact.
+          example: "22408"
+          type: string
+        lastName:
+          description: Last name of the contact.
+          example: Jones
+          type: string
+      type: object
+    driverTinyResponse:
+      description: A minified driver object.
+      example:
+        name: Susan Bob
+        id: "88668"
+      properties:
+        id:
+          description: ID of the driver.
+          example: "88668"
+          type: string
+        name:
+          description: Name of the driver.
+          example: Susan Bob
+          type: string
+      type: object
+    externalIds:
+      additionalProperties:
+        type: string
+      description: "The [external IDs](https://developers.samsara.com/docs/external-ids)\
+        \ for the given object."
+      example:
+        maintenanceId: "250020"
+        payrollId: ABFS18600
+      type: object
+    paginationResponse:
+      description: Pagination parameters.
+      example:
+        hasNextPage: true
+        endCursor: MjkY
+      properties:
+        endCursor:
+          description: Cursor identifier representing the last element in the response.
+            This value should be used in conjunction with a subsequent request's 'after'
+            query parameter. This may be an empty string if there are no more pages
+            left to view.
+          example: MjkY
+          format: string
+          type: string
+        hasNextPage:
+          description: True if there are more pages of results immediately available
+            after this endCursor.
+          example: true
+          type: boolean
+      required:
+      - endCursor
+      - hasNextPage
+      type: object
+    standardErrorResponse:
+      description: Error response
+      example:
+        requestId: requestId
+        message: message
+      properties:
+        message:
+          description: The message of the error.
+          type: string
+        requestId:
+          description: The ID of the request.
+          type: string
+      type: object
+    tagTinyResponse:
+      description: A minified tag object
+      example:
+        parentTagId: "4815"
+        name: East Coast
+        id: "3914"
+      properties:
+        id:
+          description: ID of the tag.
+          example: "3914"
+          type: string
+        name:
+          description: Name of the tag.
+          example: East Coast
+          type: string
+        parentTagId:
+          description: "If this tag is part a hierarchical tag tree, this is the ID\
+            \ of the parent tag, otherwise this will be omitted."
+          example: "4815"
+          type: string
+      type: object
+    time:
+      description: "UTC timestamp in RFC 3339 format. Example: `2020-01-27T07:06:25Z`."
+      example: 2020-01-27T07:06:25Z
+      format: date-time
+      type: string
+    vehicleTinyResponse:
+      description: A minified vehicle object.
+      properties:
+        id:
+          description: ID of the vehicle.
+          example: "123456789"
+          type: string
+        name:
+          description: Name of the vehicle.
+          example: "Midwest Truck #4"
+          type: string
+      type: object
+    AddressGeofence_circle:
+      description: Information about a circular geofence. This field is only needed
+        if the geofence is a circle.
+      example:
+        latitude: 37.765363
+        radiusMeters: 25
+        longitude: -122.4029238
+      properties:
+        latitude:
+          description: Latitude of the address. Will be geocoded from `formattedAddress`
+            if not provided.
+          example: 37.765363
+          format: double
+          type: number
+        longitude:
+          description: Longitude of the address. Will be geocoded from `formattedAddress`
+            if not provided.
+          example: -122.4029238
+          format: double
+          type: number
+        radiusMeters:
+          description: The radius of the circular geofence in meters.
+          example: 25
+          format: int64
+          type: integer
+      required:
+      - radiusMeters
+      type: object
+    AddressGeofence_polygon_vertices_inner:
+      properties:
+        latitude:
+          description: The latitude of a geofence vertex in decimal degrees.
+          format: double
+          type: number
+        longitude:
+          description: The longitude of a geofence vertex in decimal degrees.
+          format: double
+          type: number
+      required:
+      - latitude
+      - longitude
+      type: object
+    AddressGeofence_polygon:
+      description: Information about a polygon geofence. This field is only needed
+        if the geofence is a polygon.
+      example:
+        vertices:
+        - latitude: 37.765363
+          longitude: -122.403098
+        - latitude: 38.765363
+          longitude: -122.403098
+        - latitude: 37.765363
+          longitude: -123.403098
+      properties:
+        vertices:
+          description: "The vertices of the polygon geofence. These geofence vertices\
+            \ describe the perimeter of the polygon, and must consist of at least\
+            \ 3 vertices and less than 40."
+          example:
+          - latitude: 37.765363
+            longitude: -122.403098
+          - latitude: 38.765363
+            longitude: -122.403098
+          - latitude: 37.765363
+            longitude: -123.403098
+          items:
+            $ref: '#/components/schemas/AddressGeofence_polygon_vertices_inner'
+          maxItems: 40
+          minItems: 3
+          type: array
+      required:
+      - vertices
+      type: object
+    UserRoleAssignment_tag:
+      description: The tag that this role is applies to.
+      example:
+        name: East Coast
+        id: "3914"
+      properties:
+        id:
+          description: ID of the tag.
+          example: "3914"
+          type: string
+        name:
+          description: Name of the tag.
+          example: East Coast
+          type: string
+      type: object
+    VehicleLocationsListResponse_data_inner:
+      description: A vehicle and its list of location events.
+      example:
+        name: Truck A7
+        locations:
+        - heading: 120
+          latitude: 122.142
+          time: 2020-01-27T07:06:25Z
+          speed: 48.3
+          longitude: -93.343
+          reverseGeo:
+            formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+        - heading: 120
+          latitude: 122.142
+          time: 2020-01-27T07:06:25Z
+          speed: 48.3
+          longitude: -93.343
+          reverseGeo:
+            formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+        id: "112"
+      properties:
+        id:
+          description: The unique Samsara ID of the Vehicle. This is automatically
+            generated when the Vehicle object is created. It cannot be changed.
+          example: "112"
+          type: string
+        locations:
+          description: A list of location events for the given vehicle.
+          items:
+            $ref: '#/components/schemas/VehicleLocation'
+          type: array
+        name:
+          description: "The human-readable name of the Vehicle. This is set by a fleet\
+            \ administrator and will appear in both Samsara’s cloud dashboard as well\
+            \ as the Samsara Driver mobile app. **By default**, this name is the serial\
+            \ number of the Samsara Vehicle Gateway. It can be set or updated through\
+            \ the Samsara Dashboard or through the API at any time."
+          example: Truck A7
+          type: string
+      required:
+      - id
+      - locations
+      - name
+      type: object
+    VehicleLocationsResponse_data_inner:
+      description: A vehicle and its most recent location.
+      example:
+        name: Truck A7
+        location:
+          heading: 120
+          latitude: 122.142
+          time: 2020-01-27T07:06:25Z
+          speed: 48.3
+          longitude: -93.343
+          reverseGeo:
+            formattedLocation: "16 N Fair Oaks Ave, Pasadena, CA 91103"
+        id: "112"
+      properties:
+        id:
+          description: The unique Samsara ID of the Vehicle. This is automatically
+            generated when the Vehicle object is created. It cannot be changed.
+          example: "112"
+          type: string
+        location:
+          $ref: '#/components/schemas/VehicleLocation'
+        name:
+          description: "The human-readable name of the Vehicle. This is set by a fleet\
+            \ administrator and will appear in both Samsara’s cloud dashboard as well\
+            \ as the Samsara Driver mobile app. **By default**, this name is the serial\
+            \ number of the Samsara Vehicle Gateway. It can be set or updated through\
+            \ the Samsara Dashboard or through the API at any time."
+          example: Truck A7
+          type: string
+      required:
+      - id
+      - location
+      - name
+      type: object
+    VehicleStatsListResponse_data_inner:
+      description: A vehicle and its list of stat events.
+      example:
+        fuelPercents:
+        - time: 2020-01-27T07:06:25Z
+          value: 54
+        - time: 2020-01-27T07:06:25Z
+          value: 54
+        obdEngineSeconds:
+        - time: 2020-01-27T07:06:25Z
+          value: 9723103
+        - time: 2020-01-27T07:06:25Z
+          value: 9723103
+        engineStates:
+        - time: 2020-01-27T07:06:25Z
+          value: "On"
+        - time: 2020-01-27T07:06:25Z
+          value: "On"
+        gpsDistanceMeters:
+        - time: 2020-01-27T07:06:25Z
+          value: 81029.591434899
+        - time: 2020-01-27T07:06:25Z
+          value: 81029.591434899
+        gpsOdometerMeters:
+        - time: 2020-01-27T07:06:25Z
+          value: 14010293
+        - time: 2020-01-27T07:06:25Z
+          value: 14010293
+        obdOdometerMeters:
+        - time: 2020-01-27T07:06:25Z
+          value: 14010293
+        - time: 2020-01-27T07:06:25Z
+          value: 14010293
+        name: Truck A7
+        id: "112"
+      properties:
+        engineStates:
+          description: A list of engine state events for the given vehicle.
+          items:
+            $ref: '#/components/schemas/VehicleStatsEngineState'
+          type: array
+        fuelPercents:
+          description: A list of fuel percentage readings for the given vehicle.
+          items:
+            $ref: '#/components/schemas/VehicleStatsFuelPercent'
+          type: array
+        gpsDistanceMeters:
+          description: A list of GPS distance events for the given vehicle.
+          items:
+            $ref: '#/components/schemas/VehicleStatsGpsDistanceMeters'
+          type: array
+        gpsOdometerMeters:
+          description: A list of GPS odometer events for the given vehicle.
+          items:
+            $ref: '#/components/schemas/VehicleStatsGpsOdometerMeters'
+          type: array
+        id:
+          description: The unique Samsara ID of the Vehicle. This is automatically
+            generated when the Vehicle object is created. It cannot be changed.
+          example: "112"
+          type: string
+        name:
+          description: "The human-readable name of the Vehicle. This is set by a fleet\
+            \ administrator and will appear in both Samsara’s cloud dashboard as well\
+            \ as the Samsara Driver mobile app. **By default**, this name is the serial\
+            \ number of the Samsara Vehicle Gateway. It can be set or updated through\
+            \ the Samsara Dashboard or through the API at any time."
+          example: Truck A7
+          type: string
+        obdEngineSeconds:
+          description: A list of OBD engine seconds readings for the given vehicle.
+          items:
+            $ref: '#/components/schemas/VehicleStatsObdEngineSeconds'
+          type: array
+        obdOdometerMeters:
+          description: A list of OBD odometer readings for the given vehicle.
+          items:
+            $ref: '#/components/schemas/VehicleStatsObdOdometerMeters'
+          type: array
+      required:
+      - id
+      - name
+      type: object
+    VehicleStatsResponse_data_inner:
+      description: A vehicle and its most recent stat.
+      example:
+        fuelPercent:
+          time: 2020-01-27T07:06:25Z
+          value: 54
+        obdEngineSeconds:
+          time: 2020-01-27T07:06:25Z
+          value: 9723103
+        engineState:
+          time: 2020-01-27T07:06:25Z
+          value: "On"
+        gpsDistanceMeters:
+          time: 2020-01-27T07:06:25Z
+          value: 81029.591434899
+        gpsOdometerMeters:
+          time: 2020-01-27T07:06:25Z
+          value: 14010293
+        obdOdometerMeters:
+          time: 2020-01-27T07:06:25Z
+          value: 14010293
+        name: Truck A7
+        id: "112"
+      properties:
+        engineState:
+          $ref: '#/components/schemas/VehicleStatsEngineState'
+        fuelPercent:
+          $ref: '#/components/schemas/VehicleStatsFuelPercent'
+        gpsDistanceMeters:
+          $ref: '#/components/schemas/VehicleStatsGpsDistanceMeters'
+        gpsOdometerMeters:
+          $ref: '#/components/schemas/VehicleStatsGpsOdometerMeters'
+        id:
+          description: The unique Samsara ID of the Vehicle. This is automatically
+            generated when the Vehicle object is created. It cannot be changed.
+          example: "112"
+          type: string
+        name:
+          description: "The human-readable name of the Vehicle. This is set by a fleet\
+            \ administrator and will appear in both Samsara’s cloud dashboard as well\
+            \ as the Samsara Driver mobile app. **By default**, this name is the serial\
+            \ number of the Samsara Vehicle Gateway. It can be set or updated through\
+            \ the Samsara Dashboard or through the API at any time."
+          example: Truck A7
+          type: string
+        obdEngineSeconds:
+          $ref: '#/components/schemas/VehicleStatsObdEngineSeconds'
+        obdOdometerMeters:
+          $ref: '#/components/schemas/VehicleStatsObdOdometerMeters'
+      required:
+      - id
+      - name
+      type: object
+  securitySchemes:
+    bearerAuth:
+      description: The Bearer Authentication scheme.
+      in: header
+      name: Authorization
+      type: apiKey
+x-original-swagger-version: "2.0"
